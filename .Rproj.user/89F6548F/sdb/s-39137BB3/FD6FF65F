@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#' Extract *route segments* from a Google Maps Directions API response\n#' @param doc XML document with Google Maps Directions API response\n#' @return Line layer (class \\code{sf}) representing route segments\n#' @export\n#' @examples\n#' \\dontrun{\n#' doc = google_directions(\n#'   origin = c(34.81127, 31.89277),\n#'   destination = c(34.781107, 32.085003),\n#'   alternatives = TRUE\n#' )\n#' seg = extract_segments(doc)\n#' }\n\nextract_segments = function(doc)  {\n\n  # Count alternative routes\n  alternatives =\n    doc %>%\n    xml_find_all(\"//route\") %>%\n    length\n\n  routes = list()\n\n  for(i in 1:alternatives) {\n\n  summary =\n    doc %>%\n    xml_find_all(sprintf(\"/DirectionsResponse/route[%s]/summary\", i)) %>%\n    xml_text\n\n  steps =\n    doc %>%\n    xml_find_all(sprintf(\"/DirectionsResponse/route[%s]/leg/step/polyline/points\", i)) %>%\n    xml_text\n\n  instructions =\n    doc %>%\n    xml_find_all(sprintf(\"/DirectionsResponse/route[%s]/leg/step/html_instructions\", i)) %>%\n    xml_text\n\n  distance_m =\n    doc %>%\n    xml_find_all(sprintf(\"/DirectionsResponse/route[%s]/leg/step/distance/value\", i)) %>%\n    xml_text %>%\n    as.numeric\n\n  distance_text =\n    doc %>%\n    xml_find_all(sprintf(\"/DirectionsResponse/route[%s]/leg/step/distance/text\", i)) %>%\n    xml_text\n\n  duration_s =\n    doc %>%\n    xml_find_all(sprintf(\"/DirectionsResponse/route[%s]/leg/step/duration/value\", i)) %>%\n    xml_text %>%\n    as.numeric\n\n  duration_text =\n    doc %>%\n    xml_find_all(sprintf(\"/DirectionsResponse/route[%s]/leg/step/duration/text\", i)) %>%\n    xml_text\n\n  rt = lapply(steps, decode_line)\n  rt = lapply(rt, st_linestring)\n  rt = lapply(rt, st_sfc, crs = 4326)\n  rt = do.call(c, rt)\n\n  routes[[i]] = st_sf(\n    alternative_id = i,\n    segment_id = 1:length(rt),\n    summary = summary,\n    instructions = instructions,\n    distance_m = distance_m,\n    distance_text = distance_text,\n    duration_s = duration_s,\n    duration_text = duration_text,\n    geomerty = rt,\n    stringsAsFactors = FALSE\n    )\n\n  }\n\n  routes = do.call(rbind, routes)\n\n  return(routes)\n\n}\n\n\n",
+    "created" : 1506063388815.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "318303308",
+    "id" : "FD6FF65F",
+    "lastKnownWriteTime" : 1506266055,
+    "last_content_update" : 1506266055028,
+    "path" : "~/Dropbox/Packages/mapsapi/R/extract_segments.R",
+    "project_path" : "R/extract_segments.R",
+    "properties" : {
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

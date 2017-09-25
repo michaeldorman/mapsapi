@@ -1,0 +1,20 @@
+Package: mapsapi
+Type: Package
+Title: Get directions line features and distance matrices using Google Maps APIs  
+Version: 0.1.0
+Authors@R: person("Michael", "Dorman", email = "dorman@post.bgu.ac.il", role = c("aut", "cre"))
+Description: Interface to the Google Maps API: (1) routing directions based on the Directions API, returned as 'sf' objects, either as single feature per alternative route, or a single feature per segment per alternative route, (2) travel distance or time matrices based on the Distance Matrix API.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports:
+    magrittr (>= 1.5),
+    xml2 (>= 1.1.1),
+    sf (>= 0.5-3),
+    bitops (>= 1.0-6)
+RoxygenNote: 6.0.1
+Suggests: 
+    knitr,
+    rmarkdown,
+    leaflet
+VignetteBuilder: knitr

@@ -1,0 +1,121 @@
+---
+title: "Introduction to package `mapsapi`"
+author: "Michael Dorman"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction
+
+The `mapsapi` package provides an interface to the Google Maps APIs, currently two of them - 
+
+* <a href="https://developers.google.com/maps/documentation/directions/" target="_blank">Google Maps Direction API</a>
+* <a href="https://developers.google.com/maps/documentation/distance-matrix/" target="_blank">Google Maps Distance Matrix API</a>
+
+Functions `google_directions` and `google_matrix` are used to access the API. They return an `xml_2_document` object (package `xml2`) with the response contents.  
+
+Given a *directions* response, functions `extract_routes` and `extract_segments` can be used to process the response document into a spatial layer. Function `extract_routes` gives each alternative as a separate line, while function `extract_segments` gives each segment (that is, a portion of the route associated with specific driving instructions) as a separate line.  
+
+## Installation
+
+The package can be installed from GitHub -
+
+```{r, eval=FALSE}
+install.packages("devtools")
+devtools::install_github("michaeldorman/mapsapi")
+```
+
+And loaded with `library` - 
+
+```{r}
+library(mapsapi)
+```
+
+## Directions
+
+The following expression queries the Directions API for driving directions from Tel-Aviv and Haifa. Note that locations can be specified as a coordinate pair, a textual address or an `sf` spatial object. 
+
+```{r}
+doc = google_directions(
+  origin = c(34.81127, 31.89277),
+  destination = "Haifa",
+  alternatives = TRUE
+)
+```
+
+Given the response object, we can use `extract_routes` to create a spatial layer of route lines - 
+
+```{r}
+r = extract_routes(doc)
+```
+
+Here is the resulting object - 
+
+```{r}
+r
+```
+
+And a visualization using `leaflet` - 
+
+```{r}
+library(leaflet)
+pal = colorFactor(palette = "Dark2", domain = r$alternative_id)
+leaflet() %>% 
+  addProviderTiles(provider = providers$Stamen.TonerLite) %>% 
+  addPolylines(data = r, opacity = 1, weight = 7, color = ~pal(alternative_id))
+```
+
+Separate segments can be extracted from the same response using `extract_segments` - 
+
+```{r}
+seg = extract_segments(doc)
+```
+
+Here are the first six features of the resulting object - 
+
+```{r}
+head(seg)
+```
+
+And a visualization - 
+
+```{r}
+pal = colorFactor(palette = sample(colors(), length(unique(seg$segment_id))), domain = seg$segment_id)
+leaflet(seg) %>% 
+  addProviderTiles(provider = providers$Stamen.TonerLite) %>% 
+  addPolylines(opacity = 1, weight = 7, color = ~pal(segment_id), popup = ~instructions)
+```
+
+## Distance Matrix
+
+The following expression queries the Distance Matrix API to obtain a matrix of driving distance and duration between all combinations of three locations: Tel-Aviv, Jerusalem and Beer-Sheva. 
+
+```{r}
+locations = c("Tel-Aviv", "Jerusalem", "Beer-Sheva")
+doc = google_matrix(
+  origins = locations,
+  destinations = locations
+)
+```
+
+The `extract_matrix` function can then be used to process the XML reposne into a `matrix`. Possible values of the matrix include -
+
+* `distance_m` - Distance, in meters
+* `distance_text` - Distance, textual description
+* `duration_s` - Duration, in seconds
+* `duration_text` - Duration, textual description
+
+```{r}
+m = extract_matrix(doc, value = "distance_m")
+colnames(m) = locations
+rownames(m) = locations
+m
+```
+
+
+
+
