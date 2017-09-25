@@ -1,6 +1,6 @@
 Package: mapsapi
 Type: Package
-Title: Get directions line features and distance matrices using Google Maps APIs  
+Title: 'sf'-Compatible Interface to Google Maps APIs  
 Version: 0.1.0
 Authors@R: person("Michael", "Dorman", email = "dorman@post.bgu.ac.il", role = c("aut", "cre"))
 Description: Interface to the Google Maps API: (1) routing directions based on the Directions API, returned as 'sf' objects, either as single feature per alternative route, or a single feature per segment per alternative route, (2) travel distance or time matrices based on the Distance Matrix API.

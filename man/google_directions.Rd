@@ -8,7 +8,12 @@ google_directions(origin, destination, mode = c("driving", "transit",
   "walking", "bicycling"), alternatives = FALSE, avoid = NULL, key = NULL)
 }
 \arguments{
-\item{origin}{Origin, as numeric vector of length two (lon, lat)}
+\item{origin}{Origin, as \itemize{
+\item{\code{character} vector of length one with address to be geocoded}
+\item{\code{numeric} vector of length two (lon, lat)}
+\item{\code{matrix} with one row and two columns (lon, lat)}
+\item{\code{sf} or \code{sfc} layer with one feature}
+}}
 
 \item{destination}{Destination, as numeric vector of length two (lon, lat)}
 
@@ -31,6 +36,11 @@ Get directions from the Google Maps Directions API
 doc = google_directions(
   origin = c(34.81127, 31.89277),
   destination = c(34.781107, 32.085003),
+  alternatives = TRUE
+)
+doc = google_directions(
+  origin = "Beer-Sheva",
+  destination = c(34.781107, 32.085003) \%>\% st_point \%>\% st_sfc(crs = 4326),
   alternatives = TRUE
 )
 }

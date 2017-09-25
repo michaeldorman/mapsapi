@@ -19,11 +19,14 @@ Extract distance or duration *matrix* from a Google Maps Distance Matrix API res
 }
 \examples{
 \dontrun{
-doc = google_directions(
-  origin = c(34.81127, 31.89277),
-  destination = c(34.781107, 32.085003),
-  alternatives = TRUE
+locations = c("Haifa", "Tel-Aviv", "Jerusalem", "Beer-Sheva")
+doc = google_matrix(
+  origins = locations,
+  destinations = locations
 )
-m = extract_matrix(doc, value = "distance_text")
+extract_matrix(doc, value = "distance_m")
+extract_matrix(doc, value = "distance_text")
+extract_matrix(doc, value = "duration_s")
+extract_matrix(doc, value = "duration_text")
 }
 }

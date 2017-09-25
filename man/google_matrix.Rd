@@ -28,8 +28,12 @@ Get distance matrix from the Google Maps Distance Matrix API
 \dontrun{
 doc = google_matrix(
   origins = rbind(c(34.81127, 31.89277), c(35.212085, 31.769976)),
-  destinations = c(34.781107, 32.085003),
-  key = "AIzaSyCYLJ0LDjodr4VexjgZfbEe-AYFQcIlsz4"
+  destinations = c(34.781107, 32.085003)
+)
+locations = c("Haifa", "Tel-Aviv", "Jerusalem", "Beer-Sheva")
+doc = google_matrix(
+  origins = locations,
+  destinations = locations
 )
 }
 }
