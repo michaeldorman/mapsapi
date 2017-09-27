@@ -39,12 +39,19 @@ library(mapsapi)
 
 The following expression queries the Directions API for driving directions from Tel-Aviv and Haifa. Note that locations can be specified as a coordinate pair, a textual address or an `sf` spatial object. 
 
-```{r}
+```{r, eval=FALSE}
 doc = google_directions(
   origin = c(34.81127, 31.89277),
   destination = "Haifa",
   alternatives = TRUE
 )
+```
+
+Or using the sample response data included in the packages -
+
+```{r}
+library(xml2)
+doc = as_xml_document(response_directions)
 ```
 
 Given the response object, we can use `extract_routes` to create a spatial layer of route lines - 
@@ -96,10 +103,19 @@ The following expression queries the Distance Matrix API to obtain a matrix of d
 
 ```{r}
 locations = c("Tel-Aviv", "Jerusalem", "Beer-Sheva")
+```
+
+```{r, eval = FALSE}
 doc = google_matrix(
   origins = locations,
   destinations = locations
 )
+```
+
+Or using the sample response data included in the packages -
+
+```{r}
+doc = as_xml_document(response_matrix)
 ```
 
 The `extract_matrix` function can then be used to process the XML reposne into a `matrix`. Possible values of the matrix include -
