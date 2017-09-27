@@ -3,6 +3,10 @@
 #' @return Line layer (class \code{sf}) representing routes
 #' @export
 #' @examples
+#' library(xml2)
+#' doc = as_xml_document(response_directions)
+#' r = extract_routes(doc)
+#' plot(r)
 #' \dontrun{
 #' doc = google_directions(
 #'   origin = c(34.81127, 31.89277),
@@ -10,6 +14,7 @@
 #'   alternatives = TRUE
 #' )
 #' r = extract_routes(doc)
+#' plot(r)
 #' }
 
 extract_routes = function(doc)  {

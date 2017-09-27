@@ -32,6 +32,8 @@ XML document with Google Maps Directions API response
 Get directions from the Google Maps Directions API
 }
 \examples{
+library(xml2)
+doc = as_xml_document(response_directions)
 \dontrun{
 doc = google_directions(
   origin = c(34.81127, 31.89277),

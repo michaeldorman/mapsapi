@@ -25,6 +25,8 @@ XML document with Google Maps Distance Matrix API response
 Get distance matrix from the Google Maps Distance Matrix API
 }
 \examples{
+library(xml2)
+doc = as_xml_document(response_matrix)
 \dontrun{
 doc = google_matrix(
   origins = rbind(c(34.81127, 31.89277), c(35.212085, 31.769976)),

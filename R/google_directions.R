@@ -16,6 +16,8 @@
 #' @importFrom xml2 read_xml xml_find_all xml_text
 #' @export
 #' @examples
+#' library(xml2)
+#' doc = as_xml_document(response_directions)
 #' \dontrun{
 #' doc = google_directions(
 #'   origin = c(34.81127, 31.89277),

@@ -3,6 +3,10 @@
 #' @return Line layer (class \code{sf}) representing route segments
 #' @export
 #' @examples
+#' library(xml2)
+#' doc = as_xml_document(response_directions)
+#' seg = extract_segments(doc)
+#' plot(seg)
 #' \dontrun{
 #' doc = google_directions(
 #'   origin = c(34.81127, 31.89277),

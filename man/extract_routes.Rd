@@ -16,6 +16,10 @@ Line layer (class \code{sf}) representing routes
 Extract *routes* from Google Maps Directions API response
 }
 \examples{
+library(xml2)
+doc = as_xml_document(response_directions)
+r = extract_routes(doc)
+plot(r)
 \dontrun{
 doc = google_directions(
   origin = c(34.81127, 31.89277),
@@ -23,5 +27,6 @@ doc = google_directions(
   alternatives = TRUE
 )
 r = extract_routes(doc)
+plot(r)
 }
 }

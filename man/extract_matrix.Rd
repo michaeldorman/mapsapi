@@ -18,6 +18,12 @@ extract_matrix(doc, value = "distance_m")
 Extract distance or duration *matrix* from a Google Maps Distance Matrix API response
 }
 \examples{
+library(xml2)
+doc = as_xml_document(response_matrix)
+extract_matrix(doc, value = "distance_m")
+extract_matrix(doc, value = "distance_text")
+extract_matrix(doc, value = "duration_s")
+extract_matrix(doc, value = "duration_text")
 \dontrun{
 locations = c("Haifa", "Tel-Aviv", "Jerusalem", "Beer-Sheva")
 doc = google_matrix(
