@@ -6,23 +6,23 @@
 #' @examples
 #' library(xml2)
 #' doc = as_xml_document(response_matrix)
-#' extract_matrix(doc, value = "distance_m")
-#' extract_matrix(doc, value = "distance_text")
-#' extract_matrix(doc, value = "duration_s")
-#' extract_matrix(doc, value = "duration_text")
+#' mp_get_matrix(doc, value = "distance_m")
+#' mp_get_matrix(doc, value = "distance_text")
+#' mp_get_matrix(doc, value = "duration_s")
+#' mp_get_matrix(doc, value = "duration_text")
 #' \dontrun{
 #' locations = c("Haifa", "Tel-Aviv", "Jerusalem", "Beer-Sheva")
-#' doc = google_matrix(
+#' doc = mp_matrix(
 #'   origins = locations,
 #'   destinations = locations
 #' )
-#' extract_matrix(doc, value = "distance_m")
-#' extract_matrix(doc, value = "distance_text")
-#' extract_matrix(doc, value = "duration_s")
-#' extract_matrix(doc, value = "duration_text")
+#' mp_get_matrix(doc, value = "distance_m")
+#' mp_get_matrix(doc, value = "distance_text")
+#' mp_get_matrix(doc, value = "duration_s")
+#' mp_get_matrix(doc, value = "duration_text")
 #' }
 
-extract_matrix = function(doc, value = "distance_m")  {
+mp_get_matrix = function(doc, value = "distance_m")  {
 
   rows =
     doc %>%

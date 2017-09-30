@@ -5,18 +5,18 @@
 #' @examples
 #' library(xml2)
 #' doc = as_xml_document(response_directions)
-#' seg = extract_segments(doc)
+#' seg = mp_get_segments(doc)
 #' plot(seg)
 #' \dontrun{
-#' doc = google_directions(
+#' doc = mp_directions(
 #'   origin = c(34.81127, 31.89277),
 #'   destination = c(34.781107, 32.085003),
 #'   alternatives = TRUE
 #' )
-#' seg = extract_segments(doc)
+#' seg = mp_get_segments(doc)
 #' }
 
-extract_segments = function(doc)  {
+mp_get_segments = function(doc)  {
 
   # Count alternative routes
   alternatives =

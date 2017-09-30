@@ -9,20 +9,43 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+<style>
+/* resize the widget container */
+.leaflet { 
+  width: 100% !important;
+}
+
+/* center the widget */
+div.svg-container {
+  margin: auto !important;
+}
+</style>
+
 ## Introduction
 
 The `mapsapi` package provides an interface to the Google Maps APIs, currently two of them - 
 
 * <a href="https://developers.google.com/maps/documentation/directions/" target="_blank">Google Maps Direction API</a>
 * <a href="https://developers.google.com/maps/documentation/distance-matrix/" target="_blank">Google Maps Distance Matrix API</a>
+* <a href="https://developers.google.com/maps/documentation/geocoding/" target="_blank">Google Maps Geocode API</a>
 
-Functions `google_directions` and `google_matrix` are used to access the API. They return an `xml_2_document` object (package `xml2`) with the response contents.  
+Functions `mp_directions`, `mp_matrix` and `mp_geocode` are used to access the APIs. They return an `xml_document` object (package `xml2`) with the response contents.  
 
-Given a *directions* response, functions `extract_routes` and `extract_segments` can be used to process the response document into a spatial layer. Function `extract_routes` gives each alternative as a separate line, while function `extract_segments` gives each segment (that is, a portion of the route associated with specific driving instructions) as a separate line.  
+* Given a *directions* response, functions `mp_get_routes` and `mp_get_segments` can be used to process the response document into a spatial layer. Function `mp_get_routes` gives each alternative as a separate line, while function `mp_get_segments` gives each segment (that is, a portion of the route associated with specific driving instructions) as a separate line. 
+
+* Given a *distance matrix* response, function `mp_get_matrix` can be used to obtain distance/duration matrices.
+
+* Given a *geocode* response, functions `mp_get_points` and `mp_get_bounds` can be used to obtain geocoded locations as a point or polygon (bounds) layer. 
 
 ## Installation
 
-The package can be installed from GitHub -
+The CRAN version can be installed with -
+
+```{r, eval=FALSE}
+install.packages("mapsapi")
+```
+
+The development version can be installed using `devtools` -
 
 ```{r, eval=FALSE}
 install.packages("devtools")
@@ -40,7 +63,7 @@ library(mapsapi)
 The following expression queries the Directions API for driving directions from Tel-Aviv and Haifa. Note that locations can be specified as a coordinate pair, a textual address or an `sf` spatial object. 
 
 ```{r, eval=FALSE}
-doc = google_directions(
+doc = mp_directions(
   origin = c(34.81127, 31.89277),
   destination = "Haifa",
   alternatives = TRUE
@@ -54,10 +77,10 @@ library(xml2)
 doc = as_xml_document(response_directions)
 ```
 
-Given the response object, we can use `extract_routes` to create a spatial layer of route lines - 
+Given the response object, we can use `mp_get_routes` to create a spatial layer of route lines - 
 
 ```{r}
-r = extract_routes(doc)
+r = mp_get_routes(doc)
 ```
 
 Here is the resulting object - 
@@ -72,14 +95,14 @@ And a visualization using `leaflet` -
 library(leaflet)
 pal = colorFactor(palette = "Dark2", domain = r$alternative_id)
 leaflet() %>% 
-  addProviderTiles(provider = providers$Stamen.TonerLite) %>% 
+  addProviderTiles("CartoDB.DarkMatter") %>%
   addPolylines(data = r, opacity = 1, weight = 7, color = ~pal(alternative_id))
 ```
 
-Separate segments can be extracted from the same response using `extract_segments` - 
+Separate segments can be extracted from the same response using `mp_get_segments` - 
 
 ```{r}
-seg = extract_segments(doc)
+seg = mp_get_segments(doc)
 ```
 
 Here are the first six features of the resulting object - 
@@ -91,9 +114,12 @@ head(seg)
 And a visualization - 
 
 ```{r}
-pal = colorFactor(palette = sample(colors(), length(unique(seg$segment_id))), domain = seg$segment_id)
+pal = colorFactor(
+  palette = sample(colors(), length(unique(seg$segment_id))), 
+  domain = seg$segment_id
+  )
 leaflet(seg) %>% 
-  addProviderTiles(provider = providers$Stamen.TonerLite) %>% 
+  addProviderTiles("CartoDB.DarkMatter") %>%
   addPolylines(opacity = 1, weight = 7, color = ~pal(segment_id), popup = ~instructions)
 ```
 
@@ -106,7 +132,7 @@ locations = c("Tel-Aviv", "Jerusalem", "Beer-Sheva")
 ```
 
 ```{r, eval = FALSE}
-doc = google_matrix(
+doc = mp_matrix(
   origins = locations,
   destinations = locations
 )
@@ -118,7 +144,7 @@ Or using the sample response data included in the packages -
 doc = as_xml_document(response_matrix)
 ```
 
-The `extract_matrix` function can then be used to process the XML reposne into a `matrix`. Possible values of the matrix include -
+The `mp_get_matrix` function can then be used to process the XML reposne into a `matrix`. Possible values of the matrix include -
 
 * `distance_m` - Distance, in meters
 * `distance_text` - Distance, textual description
@@ -126,12 +152,55 @@ The `extract_matrix` function can then be used to process the XML reposne into a
 * `duration_text` - Duration, textual description
 
 ```{r}
-m = extract_matrix(doc, value = "distance_m")
+m = mp_get_matrix(doc, value = "distance_m")
 colnames(m) = locations
 rownames(m) = locations
 m
 ```
 
+## Geocode
 
+The following expression queries the Directions API for geocoding a single address.
+
+```{r, eval=FALSE}
+doc = mp_geocode(addresses = "Tel-Aviv")
+```
+
+Or using the sample response data included in the packages -
+
+```{r}
+library(xml2)
+doc = list("Tel-Aviv" = as_xml_document(response_geocode))
+```
+
+Given the response object, we can use `mp_get_points` to create a spatial layer of geocoded point locations - 
+
+```{r}
+pnt = mp_get_points(doc)
+pnt
+```
+
+Here is a visualization using `leaflet` - 
+
+```{r}
+leaflet() %>% 
+  addProviderTiles("CartoDB.DarkMatter") %>%
+  addCircleMarkers(data = pnt)
+```
+
+Or the bounds - 
+
+```{r}
+bounds = mp_get_bounds(doc)
+bounds
+```
+
+And a visualization using `leaflet` - 
+
+```{r}
+leaflet() %>% 
+  addProviderTiles("CartoDB.DarkMatter") %>%  
+  addPolygons(data = bounds)
+```
 
 

@@ -20,3 +20,14 @@
 
 "response_matrix"
 
+#' Sample response from Google Maps Geocode API
+#'
+#' An XML document with a geocoded location for the address "Tel-Aviv"
+#'
+#' @format A \code{character} vector of length one
+#' @examples
+#' library(xml2)
+#' doc = as_xml_document(response_geocode)
+
+"response_geocode"
+
