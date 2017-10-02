@@ -7,6 +7,8 @@
 #' }
 #' @param destination Destination, in one of the same formats as for \code{origins}
 #' @param mode Travel mode, one of: \code{"driving"} (default), \code{"transit"}, \code{"walking"}, \code{"bicycling"}
+#' @param arrival_time The desired time of arrival for transit directions, as \code{POSIXct}
+#' @param departure_time The desired time of departure, as \code{POSIXct}
 #' @param alternatives Whether to return more than one alternative (\code{logical})
 #' @param avoid \code{NULL} (default) or one of: \code{"tolls"}, \code{"highways"}, \code{"ferries"}
 #' @param key Google APIs key (optional)
@@ -41,6 +43,8 @@ mp_directions = function(
   origin,
   destination,
   mode = c("driving", "transit", "walking", "bicycling"),
+  arrival_time = NULL,
+  departure_time = NULL,
   alternatives = FALSE,
   avoid = NULL,
   key = NULL
@@ -68,6 +72,24 @@ mp_directions = function(
       url,
       "&key=",
       key
+    )
+  }
+
+  # Add 'arrival_time'
+  if(!is.null(arrival_time)) {
+    url = paste0(
+      url,
+      "&arrival_time=",
+      arrival_time %>% as.numeric %>% round
+    )
+  }
+
+  # Add 'departure_time'
+  if(!is.null(departure_time)) {
+    url = paste0(
+      url,
+      "&departure_time=",
+      departure_time %>% as.numeric
     )
   }
 
