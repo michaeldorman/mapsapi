@@ -63,6 +63,7 @@ mp_matrix = function(
   }
 
   # Get response
+  url = URLencode(url)
   xml2::read_xml(url)
 
 }

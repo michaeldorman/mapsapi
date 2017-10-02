@@ -10,7 +10,8 @@
 #' @param arrival_time The desired time of arrival for transit directions, as \code{POSIXct}
 #' @param departure_time The desired time of departure, as \code{POSIXct}
 #' @param alternatives Whether to return more than one alternative (\code{logical})
-#' @param avoid \code{NULL} (default) or one of: \code{"tolls"}, \code{"highways"}, \code{"ferries"}
+#' @param avoid \code{NULL} (default) or one of: \code{"tolls"}, \code{"highways"}, \code{"ferries"} or \code{indoor}
+#' @param region The region code, specified as a ccTLD ("top-level domain") two-character value (e.g. \code{"es"} for Spain) (optional)
 #' @param key Google APIs key (optional)
 #' @return XML document with Google Maps Directions API response
 #' @note Functions \code{\link{mp_get_routes}} and \code{\link{mp_get_segments}} can be used to extract routes as \code{sf} line layers from returned object
@@ -32,6 +33,7 @@
 #'   alternatives = TRUE
 #' )
 #' # Using 'character' and 'sf' input
+#' library(magrittr); library(sf)
 #' doc = mp_directions(
 #'   origin = "Beer-Sheva",
 #'   destination = c(34.781107, 32.085003) %>% st_point %>% st_sfc(crs = 4326),
@@ -47,6 +49,7 @@ mp_directions = function(
   departure_time = NULL,
   alternatives = FALSE,
   avoid = NULL,
+  region = NULL,
   key = NULL
   ) {
 
@@ -66,15 +69,6 @@ mp_directions = function(
     "&alternatives=",
     tolower(alternatives))
 
-  # Add key
-  if(!is.null(key)) {
-    url = paste0(
-      url,
-      "&key=",
-      key
-    )
-  }
-
   # Add 'arrival_time'
   if(!is.null(arrival_time)) {
     url = paste0(
@@ -89,11 +83,33 @@ mp_directions = function(
     url = paste0(
       url,
       "&departure_time=",
-      departure_time %>% as.numeric
+      departure_time %>% as.numeric %>% round
     )
   }
 
+  # Region
+  if(!is.null(region)) {
+    url = paste0(
+      url,
+      "&region=",
+      region[i]
+    )
+  }
+
+  # Add key
+  if(!is.null(key)) {
+    url = paste0(
+      url,
+      "&key=",
+      key
+    )
+  }
+
+  # Print URL
+  message(url)
+
   # Get response
+  url = URLencode(url)
   xml2::read_xml(url)
 
 }

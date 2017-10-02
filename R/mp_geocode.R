@@ -71,6 +71,7 @@ mp_geocode = function(
     cat(paste0(addresses[i], paste0(rep(".", l), collapse = "")))
 
     # Get response
+    url = URLencode(url)
     response[[addresses[i]]] = xml2::read_xml(url)
 
     # Print response 'status'

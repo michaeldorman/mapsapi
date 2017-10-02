@@ -41,17 +41,36 @@ mp_get_routes = function(doc)  {
 
     distance_m =
       doc %>%
-      xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg/step/distance/value", i)) %>%
+      xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg/distance/value", i)) %>%
       xml_text %>%
-      as.numeric %>%
-      sum
+      as.numeric
+
+    distance_text =
+      doc %>%
+      xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg/distance/text", i)) %>%
+      xml_text
 
     duration_s =
       doc %>%
-      xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg/step/duration/value", i)) %>%
+      xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg/duration/value", i)) %>%
       xml_text %>%
-      as.numeric %>%
-      sum
+      as.numeric
+
+    duration_text =
+      doc %>%
+      xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg/duration/text", i)) %>%
+      xml_text
+
+    duration_in_traffic_s =
+      doc %>%
+      xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg/duration_in_traffic/value", i)) %>%
+      xml_text %>%
+      as.numeric
+
+    duration_in_traffic_text =
+      doc %>%
+      xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg/duration_in_traffic/text", i)) %>%
+      xml_text
 
     rt = lapply(route, decode_line)
     rt = lapply(rt, st_linestring)
@@ -62,7 +81,11 @@ mp_get_routes = function(doc)  {
     alternative_id = i,
     summary = summary,
     distance_m = distance_m,
+    distance_text = distance_text,
     duration_s = duration_s,
+    duration_text = duration_text,
+    duration_in_traffic_s = duration_in_traffic_s,
+    duration_in_traffic_text = duration_in_traffic_text,
     geomerty = rt,
     stringsAsFactors = FALSE
     )
