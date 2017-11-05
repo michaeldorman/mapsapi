@@ -26,7 +26,7 @@ You can install `mapsapi` from CRAN with -
 install.packages("mapsapi")
 ```
 
-Or from github with -
+Or from GitHub with -
 
 ``` r
 # install.packages("devtools")
@@ -36,7 +36,7 @@ devtools::install_github("michaeldorman/mapsapi")
 Example
 -------
 
-The following code section obtains (and plots) the driving directions from Beer-Sheva to Eilat -
+The following code section obtains (and plots) the driving directions from New-York to Los Angeles -
 
 ``` r
 library(mapsapi)
