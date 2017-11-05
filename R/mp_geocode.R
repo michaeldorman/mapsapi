@@ -83,6 +83,9 @@ mp_geocode = function(
 
     cat("\n")
 
+    # Wait 1 seconds to avoid rate limit (50 requests per minute)
+    if(length(addresses > 1)) Sys.sleep(1)
+
   }
 
   return(response)

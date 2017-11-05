@@ -23,7 +23,7 @@ div.svg-container {
 
 ## Introduction
 
-The `mapsapi` package provides an interface to the Google Maps APIs, currently two of them - 
+The `mapsapi` package provides an interface to the Google Maps APIs, currently three of them - 
 
 * <a href="https://developers.google.com/maps/documentation/directions/" target="_blank">Google Maps Direction API</a>
 * <a href="https://developers.google.com/maps/documentation/distance-matrix/" target="_blank">Google Maps Distance Matrix API</a>
