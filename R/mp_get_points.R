@@ -1,5 +1,6 @@
 #' Extract geocoded points from Google Maps Geocode API response
 #' @param doc XML document with Google Maps Geocode API response
+#' @param all_results The geocoder may return several results when address queries are ambiguous. Should all results be returned (\code{TRUE}), or just the first one (\code{FALSE}, default)?
 #' @return \code{sf} Point layer representing geocoded locations
 #' @export
 #' @examples
@@ -11,7 +12,7 @@
 #' pnt = mp_get_points(doc)
 #' }
 
-mp_get_points = function(doc)  {
+mp_get_points = function(doc, all_results = FALSE)  {
 
   # Empty lists for attributes and geometries per address
   geometry = list()
@@ -23,33 +24,36 @@ mp_get_points = function(doc)  {
     # Check status
     status =
       doc %>%
-      extract2(i) %>%
-      xml_find_all("/GeocodeResponse/status") %>%
-      xml_text
+      magrittr::extract2(i) %>%
+      xml2::xml_find_all("/GeocodeResponse/status") %>%
+      xml2::xml_text()
 
     if(status == "OK") {
 
     # Address from Google
     address_google =
       doc %>%
-      extract2(i) %>%
-      xml_find_all("/GeocodeResponse/result/formatted_address") %>%
-      xml_text
+      magrittr::extract2(i) %>%
+      xml2::xml_find_all("/GeocodeResponse/result/formatted_address") %>%
+      xml2::xml_text()
 
     # Coordinates
     lon =
       doc %>%
-      extract2(i) %>%
-      xml_find_all("/GeocodeResponse/result/geometry/location/lng") %>%
-      xml_text %>%
+      magrittr::extract2(i) %>%
+      xml2::xml_find_all("/GeocodeResponse/result/geometry/location/lng") %>%
+      xml2::xml_text() %>%
       as.numeric
     lat =
       doc %>%
-      extract2(i) %>%
-      xml_find_all("/GeocodeResponse/result/geometry/location/lat") %>%
-      xml_text %>%
+      magrittr::extract2(i) %>%
+      xml2::xml_find_all("/GeocodeResponse/result/geometry/location/lat") %>%
+      xml2::xml_text() %>%
       as.numeric
-    pnt = st_point(c(lon, lat))
+    coords = cbind(lon, lat)
+    coords = split(coords, 1:nrow(coords))
+    pnt = lapply(coords, function(x) sf::st_point(x))
+    pnt = sf::st_sfc(pnt, crs = 4326)
 
     } else {
 
@@ -64,6 +68,7 @@ mp_get_points = function(doc)  {
     # Add attribute and geometry to lists
     geometry[[i]] = pnt
     dat[[i]] = data.frame(
+      id = i,
       status = status,
       address = names(doc)[i],
       address_google = address_google,
@@ -73,11 +78,18 @@ mp_get_points = function(doc)  {
   }
 
   # Combine attributes and geometries
-  geometry = st_sfc(geometry, crs = 4326)
+  geometry = do.call(c, geometry)
   dat = do.call(rbind, dat)
 
   # To 'sf'
-  sf::st_sf(dat, geometry)
+  result = sf::st_sf(dat, geometry)
+
+  # Select just first result
+  if(!all_results) {
+    result = result[!duplicated(dat$id), ]
+  }
+
+  return(result)
 
 }
 

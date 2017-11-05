@@ -17,14 +17,19 @@ Extract *route segments* from a Google Maps Directions API response
 }
 \examples{
 library(xml2)
-doc = as_xml_document(response_directions)
+doc = as_xml_document(response_directions_driving)
+seg = mp_get_segments(doc)
+plot(seg)
+doc = as_xml_document(response_directions_transit)
 seg = mp_get_segments(doc)
 plot(seg)
 \dontrun{
+# Transit example
 doc = mp_directions(
   origin = c(34.81127, 31.89277),
   destination = c(34.781107, 32.085003),
-  alternatives = TRUE
+  mode = "transit",
+  alternatives = TRUE,
 )
 seg = mp_get_segments(doc)
 }

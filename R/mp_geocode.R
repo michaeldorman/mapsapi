@@ -71,14 +71,14 @@ mp_geocode = function(
     cat(paste0(addresses[i], paste0(rep(".", l), collapse = "")))
 
     # Get response
-    url = URLencode(url)
+    url = utils::URLencode(url)
     response[[addresses[i]]] = xml2::read_xml(url)
 
     # Print response 'status'
     status =
       response[[i]] %>%
-      xml_find_all("/GeocodeResponse/status") %>%
-      xml_text
+      xml2::xml_find_all("/GeocodeResponse/status") %>%
+      xml2::xml_text()
     if(!is.null(status)) cat(status)
 
     cat("\n")

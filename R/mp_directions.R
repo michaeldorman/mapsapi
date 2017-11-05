@@ -10,7 +10,7 @@
 #' @param arrival_time The desired time of arrival for transit directions, as \code{POSIXct}
 #' @param departure_time The desired time of departure, as \code{POSIXct}
 #' @param alternatives Whether to return more than one alternative (\code{logical})
-#' @param avoid \code{NULL} (default) or one of: \code{"tolls"}, \code{"highways"}, \code{"ferries"} or \code{indoor}
+#' @param avoid \code{NULL} (default) or one of: \code{"tolls"}, \code{"highways"}, \code{"ferries"} or \code{"indoor"}
 #' @param region The region code, specified as a ccTLD ("top-level domain") two-character value (e.g. \code{"es"} for Spain) (optional)
 #' @param key Google APIs key (optional)
 #' @return XML document with Google Maps Directions API response
@@ -18,11 +18,12 @@
 #' @import magrittr
 #' @import sf
 #' @importFrom xml2 read_xml xml_find_all xml_text
+#' @importFrom utils URLencode
 #' @export
 #' @examples
 #' # Built-in reponse example
 #' library(xml2)
-#' doc = as_xml_document(response_directions)
+#' doc = as_xml_document(response_directions_driving)
 #' r = mp_get_routes(doc)
 #' seg = mp_get_segments(doc)
 #' \dontrun{
@@ -52,6 +53,12 @@ mp_directions = function(
   region = NULL,
   key = NULL
   ) {
+
+  # Checks
+  .check_directions_mode(mode[1])
+  .check_directions_avoid(avoid)
+  .check_posix_time(arrival_time)
+  .check_posix_time(departure_time)
 
   # Origin & Destination
   origin = encode_locations(origin, single = TRUE)
@@ -87,12 +94,21 @@ mp_directions = function(
     )
   }
 
-  # Region
+  # Add 'avoid'
+  if(!is.null(avoid)) {
+    url = paste0(
+      url,
+      "&avoid=",
+      avoid
+    )
+  }
+
+  # Add 'region'
   if(!is.null(region)) {
     url = paste0(
       url,
       "&region=",
-      region[i]
+      region
     )
   }
 
@@ -109,7 +125,7 @@ mp_directions = function(
   message(url)
 
   # Get response
-  url = URLencode(url)
+  url = utils::URLencode(url)
   xml2::read_xml(url)
 
 }

@@ -26,7 +26,7 @@ mp_directions(origin, destination, mode = c("driving", "transit", "walking",
 
 \item{alternatives}{Whether to return more than one alternative (\code{logical})}
 
-\item{avoid}{\code{NULL} (default) or one of: \code{"tolls"}, \code{"highways"}, \code{"ferries"} or \code{indoor}}
+\item{avoid}{\code{NULL} (default) or one of: \code{"tolls"}, \code{"highways"}, \code{"ferries"} or \code{"indoor"}}
 
 \item{region}{The region code, specified as a ccTLD ("top-level domain") two-character value (e.g. \code{"es"} for Spain) (optional)}
 
@@ -44,7 +44,7 @@ Functions \code{\link{mp_get_routes}} and \code{\link{mp_get_segments}} can be u
 \examples{
 # Built-in reponse example
 library(xml2)
-doc = as_xml_document(response_directions)
+doc = as_xml_document(response_directions_driving)
 r = mp_get_routes(doc)
 seg = mp_get_segments(doc)
 \dontrun{

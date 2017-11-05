@@ -5,7 +5,8 @@
 \title{Get distance matrix from the Google Maps Distance Matrix API}
 \usage{
 mp_matrix(origins, destinations, mode = c("driving", "transit", "walking",
-  "bicycling"), alternatives = FALSE, key = NULL)
+  "bicycling"), arrival_time = NULL, departure_time = NULL, avoid = NULL,
+  region = NULL, key = NULL)
 }
 \arguments{
 \item{origins}{Origins, as \itemize{
@@ -17,9 +18,15 @@ mp_matrix(origins, destinations, mode = c("driving", "transit", "walking",
 
 \item{destinations}{Destinations, in one of the same formats as for \code{origins}}
 
-\item{mode}{Travel mode, one of: "driving", "transit", "walking", "bicycling"}
+\item{mode}{Travel mode, one of: \code{"driving"}, \code{"transit"}, \code{"walking"}, \code{"bicycling"}}
 
-\item{alternatives}{Whether to return more than one alternative (\code{logical})}
+\item{arrival_time}{The desired time of arrival for transit directions, as \code{POSIXct}}
+
+\item{departure_time}{The desired time of departure, as \code{POSIXct}}
+
+\item{avoid}{\code{NULL} (default) or one of: \code{"tolls"}, \code{"highways"}, \code{"ferries"} or \code{"indoor"}}
+
+\item{region}{The region code, specified as a ccTLD ("top-level domain") two-character value (e.g. \code{"es"} for Spain) (optional)}
 
 \item{key}{Google APIs key (optional)}
 }

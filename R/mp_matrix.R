@@ -6,8 +6,11 @@
 #' \item{\code{sf} or \code{sfc} point layer}
 #' }
 #' @param destinations Destinations, in one of the same formats as for \code{origins}
-#' @param mode Travel mode, one of: "driving", "transit", "walking", "bicycling"
-#' @param alternatives Whether to return more than one alternative (\code{logical})
+#' @param mode Travel mode, one of: \code{"driving"}, \code{"transit"}, \code{"walking"}, \code{"bicycling"}
+#' @param arrival_time The desired time of arrival for transit directions, as \code{POSIXct}
+#' @param departure_time The desired time of departure, as \code{POSIXct}
+#' @param avoid \code{NULL} (default) or one of: \code{"tolls"}, \code{"highways"}, \code{"ferries"} or \code{"indoor"}
+#' @param region The region code, specified as a ccTLD ("top-level domain") two-character value (e.g. \code{"es"} for Spain) (optional)
 #' @param key Google APIs key (optional)
 #' @return XML document with Google Maps Distance Matrix API response
 #' @note Function \code{\link{mp_get_matrix}} can be used to extract distance and duration matrices from returned object
@@ -34,9 +37,18 @@ mp_matrix = function(
   origins,
   destinations,
   mode = c("driving", "transit", "walking", "bicycling"),
-  alternatives = FALSE,
+  arrival_time = NULL,
+  departure_time = NULL,
+  avoid = NULL,
+  region = NULL,
   key = NULL
   ) {
+
+  # Checks
+  .check_directions_mode(mode[1])
+  .check_directions_avoid(avoid)
+  .check_posix_time(arrival_time)
+  .check_posix_time(departure_time)
 
   # Origins & Destinations
   origins = encode_locations(origins)
@@ -53,6 +65,42 @@ mp_matrix = function(
     mode[1]
   )
 
+  # Add 'arrival_time'
+  if(!is.null(arrival_time)) {
+    url = paste0(
+      url,
+      "&arrival_time=",
+      arrival_time %>% as.numeric %>% round
+    )
+  }
+
+  # Add 'departure_time'
+  if(!is.null(departure_time)) {
+    url = paste0(
+      url,
+      "&departure_time=",
+      departure_time %>% as.numeric %>% round
+    )
+  }
+
+  # Add 'avoid'
+  if(!is.null(avoid)) {
+    url = paste0(
+      url,
+      "&avoid=",
+      avoid
+    )
+  }
+
+  # Add 'region'
+  if(!is.null(region)) {
+    url = paste0(
+      url,
+      "&region=",
+      region
+    )
+  }
+
   # Add key
   if(!is.null(key)) {
     url = paste0(
@@ -63,7 +111,7 @@ mp_matrix = function(
   }
 
   # Get response
-  url = URLencode(url)
+  url = utils::URLencode(url)
   xml2::read_xml(url)
 
 }

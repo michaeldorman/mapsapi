@@ -4,14 +4,19 @@
 #' @export
 #' @examples
 #' library(xml2)
-#' doc = as_xml_document(response_directions)
+#' doc = as_xml_document(response_directions_driving)
+#' seg = mp_get_segments(doc)
+#' plot(seg)
+#' doc = as_xml_document(response_directions_transit)
 #' seg = mp_get_segments(doc)
 #' plot(seg)
 #' \dontrun{
+#' # Transit example
 #' doc = mp_directions(
 #'   origin = c(34.81127, 31.89277),
 #'   destination = c(34.781107, 32.085003),
-#'   alternatives = TRUE
+#'   mode = "transit",
+#'   alternatives = TRUE,
 #' )
 #' seg = mp_get_segments(doc)
 #' }
@@ -21,67 +26,104 @@ mp_get_segments = function(doc)  {
   # Count alternative routes
   alternatives =
     doc %>%
-    xml_find_all("//route") %>%
+    xml_find_all("/DirectionsResponse/route") %>%
     length
 
   routes = list()
 
   for(i in 1:alternatives) {
 
-  summary =
-    doc %>%
-    xml_find_all(sprintf("/DirectionsResponse/route[%s]/summary", i)) %>%
-    xml_text
+    summary =
+      doc %>%
+      xml_find_all(sprintf("/DirectionsResponse/route[%s]/summary", i)) %>%
+      xml_text
 
-  steps =
-    doc %>%
-    xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg/step/polyline/points", i)) %>%
-    xml_text
+    # Count steps per alternative
+    steps =
+      doc %>%
+      xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg/step", i)) %>%
+      length
 
-  instructions =
-    doc %>%
-    xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg/step/html_instructions", i)) %>%
-    xml_text
+    for(j in 1:steps) {
 
-  distance_m =
-    doc %>%
-    xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg/step/distance/value", i)) %>%
-    xml_text %>%
-    as.numeric
+      travel_mode =
+        doc %>%
+        xml_find_all(sprintf(
+          "/DirectionsResponse/route[%s]/leg/step[%s]/travel_mode"
+          , i, j)) %>%
+        xml_text %>%
+        tolower
 
-  distance_text =
-    doc %>%
-    xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg/step/distance/text", i)) %>%
-    xml_text
+      step =
+        doc %>%
+        xml_find_all(sprintf(
+          "/DirectionsResponse/route[%s]/leg/step[%s]/polyline/points",
+          i, j)) %>%
+        xml_text
 
-  duration_s =
-    doc %>%
-    xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg/step/duration/value", i)) %>%
-    xml_text %>%
-    as.numeric
+      instructions =
+        doc %>%
+        xml_find_all(sprintf(
+          "/DirectionsResponse/route[%s]/leg/step[%s]/html_instructions"
+          , i, j)) %>%
+        xml_text
 
-  duration_text =
-    doc %>%
-    xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg/step/duration/text", i)) %>%
-    xml_text
+      distance_m =
+        doc %>%
+        xml_find_all(sprintf(
+          "/DirectionsResponse/route[%s]/leg/step[%s]/distance/value"
+          , i, j)) %>%
+        xml_text %>%
+        as.numeric
 
-  rt = lapply(steps, decode_line)
-  rt = lapply(rt, st_linestring)
-  rt = lapply(rt, st_sfc, crs = 4326)
-  rt = do.call(c, rt)
+      distance_text =
+        doc %>%
+        xml_find_all(sprintf(
+          "/DirectionsResponse/route[%s]/leg/step[%s]/distance/text"
+          , i, j)) %>%
+        xml_text
 
-  routes[[i]] = st_sf(
-    alternative_id = i,
-    segment_id = 1:length(rt),
-    summary = summary,
-    instructions = instructions,
-    distance_m = distance_m,
-    distance_text = distance_text,
-    duration_s = duration_s,
-    duration_text = duration_text,
-    geomerty = rt,
-    stringsAsFactors = FALSE
-    )
+      duration_s =
+        doc %>%
+        xml_find_all(sprintf(
+          "/DirectionsResponse/route[%s]/leg/step[%s]/duration/value"
+          , i, j)) %>%
+        xml_text %>%
+        as.numeric
+
+      duration_text =
+        doc %>%
+        xml_find_all(sprintf(
+          "/DirectionsResponse/route[%s]/leg/step[%s]/duration/text"
+          , i, j)) %>%
+        xml_text
+
+      departure_stop_name =
+        doc %>%
+        xml_find_all(sprintf(
+          "/DirectionsResponse/route[%s]/leg/step[%s]/transit_details/departure_stop/name",
+          i, j)) %>%
+        xml_text
+
+      rt = decode_line(step)
+      rt = sf::st_linestring(rt)
+      rt = sf::st_sfc(rt, crs = 4326)
+
+      routes[[paste(i, j, sep = "-")]] = sf::st_sf(
+        alternative_id = i,
+        segment_id = j,
+        summary = summary,
+        travel_mode = travel_mode,
+        instructions = instructions,
+        distance_m = distance_m,
+        distance_text = distance_text,
+        duration_s = duration_s,
+        duration_text = duration_text,
+        geomerty = rt,
+        stringsAsFactors = FALSE
+      )
+
+    }
 
   }
 

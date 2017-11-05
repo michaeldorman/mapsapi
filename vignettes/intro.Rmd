@@ -74,7 +74,7 @@ Or using the sample response data included in the packages -
 
 ```{r}
 library(xml2)
-doc = as_xml_document(response_directions)
+doc = as_xml_document(response_directions_driving)
 ```
 
 Given the response object, we can use `mp_get_routes` to create a spatial layer of route lines - 

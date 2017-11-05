@@ -1,13 +1,26 @@
 #' Sample response from Google Maps Directions API
 #'
-#' An XML document with driving directions from Tel-Aviv to Haifa
+#' XML documents with \strong{driving} directions from Tel-Aviv to Haifa
 #'
 #' @format A \code{character} vector of length one
+#' @note See \code{\link{response_directions_transit}} for Directions API response with \strong{transit} directions
 #' @examples
 #' library(xml2)
-#' doc = as_xml_document(response_directions)
+#' doc = as_xml_document(response_directions_driving)
 
-"response_directions"
+"response_directions_driving"
+
+#' Sample response from Google Maps Directions API
+#'
+#' XML documents with \strong{transit} directions from New-York to Boston
+#'
+#' @format A \code{character} vector of length one
+#' @note See \code{\link{response_directions_driving}} for Directions API response with \strong{driving} directions
+#' @examples
+#' library(xml2)
+#' doc = as_xml_document(response_directions_transit)
+
+"response_directions_transit"
 
 #' Sample response from Google Maps Distance Matrix API
 #'

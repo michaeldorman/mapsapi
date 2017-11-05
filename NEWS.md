@@ -6,4 +6,6 @@
 # mapsapi 0.2.0
 
 * Added 'Geocode' API interface
+* Added input checks
+* Added arrival & departure time parameters
 

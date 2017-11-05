@@ -18,15 +18,15 @@ decode_line = function(encoded){
         vb = as.integer(charToRaw(substr(encoded, vindex, vindex))) - 63
       }
 
-      vresult = bitOr(vresult, bitShiftL(bitAnd(vb, 31), vshift))
+      vresult = bitops::bitOr(vresult, bitShiftL(bitAnd(vb, 31), vshift))
       vshift = vshift + 5
       if(vb < 32) break
     }
 
     dlat = ifelse(
-      bitAnd(vresult, 1),
-      -(bitShiftR(vresult, 1) + 1),
-      bitShiftR(vresult, 1)
+      bitops::bitAnd(vresult, 1),
+      -(bitops::bitShiftR(vresult, 1) + 1),
+      bitops::bitShiftR(vresult, 1)
     )
     vlat = vlat + dlat
 
@@ -38,15 +38,15 @@ decode_line = function(encoded){
         vb = as.integer(charToRaw(substr(encoded, vindex, vindex))) - 63
       }
 
-      vresult = bitOr(vresult, bitShiftL(bitAnd(vb, 31), vshift))
+      vresult = bitOr(vresult, bitops::bitShiftL(bitops::bitAnd(vb, 31), vshift))
       vshift = vshift + 5
       if(vb < 32) break
     }
 
     dlng = ifelse(
-      bitAnd(vresult, 1),
-      -(bitShiftR(vresult, 1) + 1),
-      bitShiftR(vresult, 1)
+      bitops::bitAnd(vresult, 1),
+      -(bitops::bitShiftR(vresult, 1) + 1),
+      bitops::bitShiftR(vresult, 1)
     )
     vlng = vlng + dlng
 

@@ -4,10 +4,12 @@
 \alias{mp_get_points}
 \title{Extract geocoded points from Google Maps Geocode API response}
 \usage{
-mp_get_points(doc)
+mp_get_points(doc, all_results = FALSE)
 }
 \arguments{
 \item{doc}{XML document with Google Maps Geocode API response}
+
+\item{all_results}{The geocoder may return several results when address queries are ambiguous. Should all results be returned (\code{TRUE}), or just the first one (\code{FALSE}, default)?}
 }
 \value{
 \code{sf} Point layer representing geocoded locations
