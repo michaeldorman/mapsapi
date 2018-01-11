@@ -11,7 +11,8 @@ Imports:
     magrittr (>= 1.5),
     xml2 (>= 1.1.1),
     sf (>= 0.5-3),
-    bitops (>= 1.0-6)
+    bitops (>= 1.0-6),
+    plyr (>= 1.8.4)
 RoxygenNote: 6.0.1
 Suggests: 
     knitr,

@@ -14,79 +14,82 @@
 
 mp_get_points = function(doc, all_results = FALSE)  {
 
-  # Empty lists for attributes and geometries per address
-  geometry = list()
-  dat = list()
+  # Empty list for results per address
+  result = list()
 
   # For each XML response / address...
   for(i in 1:length(doc)) {
 
-    # Check status
-    status =
-      doc %>%
-      magrittr::extract2(i) %>%
-      xml2::xml_find_all("/GeocodeResponse/status") %>%
-      xml2::xml_text()
+    # Non-empty document
+    if(!is.na(doc[[i]])) {
 
-    if(status == "OK") {
+      # Check status
+      status =
+        doc[[i]] %>%
+        xml2::xml_find_all("/GeocodeResponse/status") %>%
+        xml2::xml_text()
 
-    # Address from Google
-    address_google =
-      doc %>%
-      magrittr::extract2(i) %>%
-      xml2::xml_find_all("/GeocodeResponse/result/formatted_address") %>%
-      xml2::xml_text()
+    } else {
 
-    # Coordinates
-    lon =
-      doc %>%
-      magrittr::extract2(i) %>%
-      xml2::xml_find_all("/GeocodeResponse/result/geometry/location/lng") %>%
-      xml2::xml_text() %>%
-      as.numeric
-    lat =
-      doc %>%
-      magrittr::extract2(i) %>%
-      xml2::xml_find_all("/GeocodeResponse/result/geometry/location/lat") %>%
-      xml2::xml_text() %>%
-      as.numeric
-    coords = cbind(lon, lat)
-    coords = split(coords, 1:nrow(coords))
-    pnt = lapply(coords, function(x) sf::st_point(x))
-    pnt = sf::st_sfc(pnt, crs = 4326)
+      status = NA
+
+    }
+
+    if(!is.na(status) & status == "OK") {
+
+      # Address from Google
+      address_google =
+        doc[[i]] %>%
+        xml2::xml_find_all("/GeocodeResponse/result/formatted_address") %>%
+        xml2::xml_text()
+
+      # Coordinates
+      lon =
+        doc[[i]] %>%
+        xml2::xml_find_all("/GeocodeResponse/result/geometry/location/lng") %>%
+        xml2::xml_text() %>%
+        as.numeric
+      lat =
+        doc[[i]] %>%
+        xml2::xml_find_all("/GeocodeResponse/result/geometry/location/lat") %>%
+        xml2::xml_text() %>%
+        as.numeric
+      coords = cbind(lon, lat)
+      coords = split(coords, 1:nrow(coords))
+      pnt = lapply(coords, function(x) sf::st_point(x))
+      pnt = sf::st_sfc(pnt, crs = 4326)
 
     } else {
 
       # Empty geometry
-      pnt = st_point()
+      pnt = sf::st_point()
+      pnt = sf::st_sfc(pnt, crs = 4326)
 
       # Empty attributes
       address_google = NA
 
     }
 
-    # Add attribute and geometry to lists
-    geometry[[i]] = pnt
-    dat[[i]] = data.frame(
-      id = i,
-      status = status,
-      address = names(doc)[i],
-      address_google = address_google,
-      stringsAsFactors = FALSE
+    # Combine result
+    result[[i]] = sf::st_sf(
+      data.frame(
+        id = i,
+        status = status,
+        address = names(doc)[i],
+        address_google = address_google,
+        stringsAsFactors = FALSE
+      ),
+      pnt
     )
 
   }
 
-  # Combine attributes and geometries
-  geometry = do.call(c, geometry)
-  dat = do.call(rbind, dat)
-
-  # To 'sf'
-  result = sf::st_sf(dat, geometry)
+  # Combine results
+  result = do.call(rbind, result)
 
   # Select just first result
   if(!all_results) {
-    result = result[!duplicated(dat$id), ]
+    result = result[!duplicated(result$id), ]
   }
 
   return(result)
