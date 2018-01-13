@@ -4,6 +4,8 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/mapsapi)](https://cran.r-project.org/package=mapsapi)
+
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,

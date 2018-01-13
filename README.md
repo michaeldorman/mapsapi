@@ -1,5 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/mapsapi)](https://cran.r-project.org/package=mapsapi)
+
 mapsapi
 =======
 
@@ -55,7 +57,7 @@ r = mp_get_routes(doc)
 # Plot
 library(maps)
 library(sf)
-#> Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.2, lwgeom 2.3.3 r15473
+#> Linking to GEOS 3.5.1, GDAL 2.2.2, proj.4 4.9.2
 
 map("state", fill = FALSE, col = "grey")
 plot(st_geometry(r), col = c("red", "green", "blue"), add = TRUE)
