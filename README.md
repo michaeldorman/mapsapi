@@ -1,6 +1,8 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/mapsapi)](https://cran.r-project.org/package=mapsapi)
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version-ago/mapsapi)](https://cran.r-project.org/package=mapsapi)
+
+[![CRAN\_Downloads\_Badge](http://cranlogs.r-pkg.org/badges/last-month/mapsapi)](https://cran.r-project.org/package=mapsapi)
 
 mapsapi
 =======
