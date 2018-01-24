@@ -111,7 +111,7 @@ mp_geocode = function(
       # https://developers.google.com/maps/documentation/javascript/geocoding#GeocodingViewports
       # expects the latitude/longitude coordinates of the southwest and northeast corners
       # e.g. https://maps.googleapis.com/maps/api/geocode/json?address=Winnetka&bounds=34.172684,-118.604794|34.236144,-118.500938&key=YOUR_API_KEY
-      if(!is.null(region)) {
+      if(!is.null(bounds)) {
         url = paste0(
           url,
           "&bounds=",
