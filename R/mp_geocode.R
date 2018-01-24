@@ -1,6 +1,7 @@
 #' Get geocoded coordinates using the Google Maps Geocoding API
 #' @param addresses Addresses to geocode, as \code{character} vector
 #' @param region The region code, specified as a ccTLD ("top-level domain") two-character value (e.g. \code{"es"} for Spain) (optional)
+#' @param bounds A preferred bounding box (optional) expects the latitude/longitude coordinates of the southwest and northeast corners
 #' @param key Google APIs key (optional)
 #' @return \code{list} of XML documents with Google Maps Geocoding API responses, one item per element in \code{addresses}
 #' @note \itemize{
@@ -45,16 +46,28 @@
 #' doc = mp_geocode(addresses, key = key)
 #' pnt = mp_get_points(doc)
 #'
+#' # Specifying a bounding box
+#'
+#' n_w= c(-123.695068359375,39.00637903337455)
+#' s_e= c(-120.421142578125,36.35052700542763)
+#' n_w_s <- paste(n_w, sep="", collapse=",")
+#' s_e_s <- paste(s_e, sep="", collapse=",")
+#' bay_area_bbox <- paste(n_w_s,s_e_s,sep="|",collapse="")
+#'
+#' result <- mp_geocode(addresses, region="us", key=key, bounds=bay_area_bbox)
+#'
 #' }
 
 mp_geocode = function(
   addresses,
   region = NULL,
+  bounds = NULL,
   key = NULL
   ) {
 
-  # Replicate region if necessary
+  # Replicate region/bounds if necessary
   if(length(region) == 1) region = rep(region, length(addresses))
+  if(length(bounds) == 1) region = rep(bounds, length(addresses))
 
   # Remove invalid addresses
   addresses[addresses == ""] = NA
@@ -91,6 +104,18 @@ mp_geocode = function(
           url,
           "&region=",
           region[i]
+        )
+      }
+
+      # Viewport/Bounding Box Biasing
+      # https://developers.google.com/maps/documentation/javascript/geocoding#GeocodingViewports
+      # expects the latitude/longitude coordinates of the southwest and northeast corners
+      # e.g. https://maps.googleapis.com/maps/api/geocode/json?address=Winnetka&bounds=34.172684,-118.604794|34.236144,-118.500938&key=YOUR_API_KEY
+      if(!is.null(region)) {
+        url = paste0(
+          url,
+          "&bounds=",
+          bounds[i]
         )
       }
 
