@@ -1,7 +1,7 @@
 #' Get geocoded coordinates using the Google Maps Geocoding API
 #' @param addresses Addresses to geocode, as \code{character} vector
-#' @param region The region code, specified as a ccTLD ("top-level domain") two-character value (e.g. \code{"es"} for Spain) (optional)
-#' @param bounds A preferred bounding box (optional) expects the latitude/longitude coordinates of the southwest and northeast corners
+#' @param region The region code, specified as a ccTLD ("top-level domain") two-character value (e.g. \code{"es"} for Spain). This can to be a character vector of length 1 (in which case it is replicated) or a character vector with the same length of \code{addresses} (optional)
+#' @param bounds A preferred bounding box, specified as a numeric vector with four values xmin/ymin/xmax/ymax (in latitude/longitude) representing the coordinates of the southwest and northeast corners, e.g. as returned by function `sf::st_bbox`. This can be a single vector (in which case it is replicated) or a \code{list} of numeric vectors with the same length as \codeP{addresses} (optional)
 #' @param key Google APIs key (optional)
 #' @return \code{list} of XML documents with Google Maps Geocoding API responses, one item per element in \code{addresses}
 #' @note \itemize{
@@ -47,14 +47,12 @@
 #' pnt = mp_get_points(doc)
 #'
 #' # Specifying a bounding box
+#' bay_area_bbox = c(34.172684, -118.604794, 34.236144, -118.500938)
 #'
-#' n_w= c(-123.695068359375,39.00637903337455)
-#' s_e= c(-120.421142578125,36.35052700542763)
-#' n_w_s <- paste(n_w, sep="", collapse=",")
-#' s_e_s <- paste(s_e, sep="", collapse=",")
-#' bay_area_bbox <- paste(n_w_s,s_e_s,sep="|",collapse="")
-#'
-#' result <- mp_geocode(addresses, region="us", key=key, bounds=bay_area_bbox)
+#' result = mp_geocode(addresses = "Winnetka", key = key)
+#' mp_get_points(result)
+#' result = mp_geocode(addresses = "Winnetka", bounds = bay_area_bbox, key = key)
+#' mp_get_points(result)
 #'
 #' }
 
@@ -67,7 +65,10 @@ mp_geocode = function(
 
   # Replicate region/bounds if necessary
   if(length(region) == 1) region = rep(region, length(addresses))
-  if(length(bounds) == 1) region = rep(bounds, length(addresses))
+  if(!is.null(bounds) & !is.list(bounds)) {
+    bounds = list(bounds)
+    bounds = rep(bounds, length(addresses))
+  }
 
   # Remove invalid addresses
   addresses[addresses == ""] = NA
@@ -115,7 +116,7 @@ mp_geocode = function(
         url = paste0(
           url,
           "&bounds=",
-          bounds[i]
+          encode_bounds(bounds[[i]])
         )
       }
 
