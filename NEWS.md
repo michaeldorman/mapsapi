@@ -15,3 +15,7 @@
 * Fixed index issue in 'mp_geocode'
 * Fixed 'mp_get_points' issue with multiple points
 
+# mapsapi 0.3.5
+
+* Added 'bounds' parameter for 'mp_geocode'
+* Added argument validation in 'mp_geocode' 

@@ -47,11 +47,12 @@
 #' pnt = mp_get_points(doc)
 #'
 #' # Specifying a bounding box
-#' bay_area_bbox = c(34.172684, -118.604794, 34.236144, -118.500938)
-#'
+#' b = c(34.172684, -118.604794, 34.236144, -118.500938)
 #' result = mp_geocode(addresses = "Winnetka", key = key)
 #' mp_get_points(result)
-#' result = mp_geocode(addresses = "Winnetka", bounds = bay_area_bbox, key = key)
+#' result = mp_geocode(addresses = "Winnetka", bounds = b, key = key)
+#' mp_get_points(result)
+#' result = mp_geocode(addresses = rep("Winnetka", 3), bounds = list(b, NA, b), key = key)
 #' mp_get_points(result)
 #'
 #' }
@@ -62,6 +63,11 @@ mp_geocode = function(
   bounds = NULL,
   key = NULL
   ) {
+
+  # Checks
+  .check_addresses(addresses)
+  .check_region(region, addresses)
+  .check_bounds(bounds, addresses)
 
   # Replicate region/bounds if necessary
   if(length(region) == 1) region = rep(region, length(addresses))
