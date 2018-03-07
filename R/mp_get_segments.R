@@ -119,7 +119,7 @@ mp_get_segments = function(doc)  {
         distance_text = distance_text,
         duration_s = duration_s,
         duration_text = duration_text,
-        geomerty = rt,
+        geometry = rt,
         stringsAsFactors = FALSE
       )
 

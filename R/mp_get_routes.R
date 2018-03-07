@@ -97,7 +97,7 @@ mp_get_routes = function(doc)  {
     duration_text = duration_text,
     duration_in_traffic_s = duration_in_traffic_s,
     duration_in_traffic_text = duration_in_traffic_text,
-    geomerty = rt,
+    geometry = rt,
     stringsAsFactors = FALSE
     )
 
