@@ -9,30 +9,58 @@ mp_get_matrix(doc, value = "distance_m")
 \arguments{
 \item{doc}{XML document with Google Maps Distance Matrix API response}
 
-\item{value}{Value to extract, one of: \code{"distance_m"} (default), \code{"distance_text"}, \code{"duration_s"}, \code{"duration_text"}}
+\item{value}{Value to extract, one of: \code{"distance_m"} (default), \code{"distance_text"}, \code{"duration_s"}, \code{"duration_text"}, \code{"duration_in_traffic_s"}, \code{"duration_in_traffic_text"}}
 }
 \value{
-\code{matrix}
+A \code{matrix}, where rows represent origins and columns represent destinations. Matrix values are according to selected \code{value}, or \code{NA} if the ARI returned zero results
 }
 \description{
 Extract distance or duration *matrix* from a Google Maps Distance Matrix API response
 }
+\note{
+The \code{"duration_in_traffic_s"} and \code{"duration_in_traffic_text"} options are only applicable when the API response contains these fields, i.e., when using \code{\link{mp_matrix}} with \code{mode="driving"}, with \code{departure_time} specified, and API key \code{key} provided
+}
 \examples{
+
 library(xml2)
 doc = as_xml_document(response_matrix)
 mp_get_matrix(doc, value = "distance_m")
 mp_get_matrix(doc, value = "distance_text")
 mp_get_matrix(doc, value = "duration_s")
 mp_get_matrix(doc, value = "duration_text")
+
 \dontrun{
-locations = c("Haifa", "Tel-Aviv", "Jerusalem", "Beer-Sheva")
+
+key = readLines("~/key") # Text file with API key
+
+locations = c("Tel-Aviv", "Jerusalem", "Neve Shalom")
+
+# Driving times
 doc = mp_matrix(
   origins = locations,
-  destinations = locations
+  destinations = locations,
+  mode = "driving",
+  departure_time = Sys.time() + as.difftime(10, units = "mins"),
+  key = key
 )
 mp_get_matrix(doc, value = "distance_m")
 mp_get_matrix(doc, value = "distance_text")
 mp_get_matrix(doc, value = "duration_s")
 mp_get_matrix(doc, value = "duration_text")
+mp_get_matrix(doc, value = "duration_in_traffic_s")
+mp_get_matrix(doc, value = "duration_in_traffic_text")
+
+# Public transport times
+doc = mp_matrix(
+  origins = locations,
+  destinations = locations,
+  mode = "transit",
+  key = key
+)
+mp_get_matrix(doc, value = "distance_m")
+mp_get_matrix(doc, value = "distance_text")
+mp_get_matrix(doc, value = "duration_s")
+mp_get_matrix(doc, value = "duration_text")
+
 }
 }

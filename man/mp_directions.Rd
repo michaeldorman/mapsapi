@@ -39,7 +39,10 @@ XML document with Google Maps Directions API response
 Get directions from the Google Maps Directions API
 }
 \note{
-Functions \code{\link{mp_get_routes}} and \code{\link{mp_get_segments}} can be used to extract routes as \code{sf} line layers from returned object
+\itemize{
+\item Use function \code{\link{mp_get_routes}} to extract \code{sf} line layer where each feature is a \strong{route}
+\item Use function \code{\link{mp_get_segments}} to extract \code{sf} line layer where each feature is a \strong{route segment}
+}
 }
 \examples{
 # Built-in reponse example
@@ -62,4 +65,7 @@ doc = mp_directions(
   alternatives = TRUE
 )
 }
+}
+\references{
+\url{https://developers.google.com/maps/documentation/directions/intro}
 }

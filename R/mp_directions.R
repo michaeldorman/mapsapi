@@ -14,11 +14,11 @@
 #' @param region The region code, specified as a ccTLD ("top-level domain") two-character value (e.g. \code{"es"} for Spain) (optional)
 #' @param key Google APIs key (optional)
 #' @return XML document with Google Maps Directions API response
-#' @note Functions \code{\link{mp_get_routes}} and \code{\link{mp_get_segments}} can be used to extract routes as \code{sf} line layers from returned object
-#' @import magrittr
-#' @import sf
-#' @importFrom xml2 read_xml xml_find_all xml_text
-#' @importFrom utils URLencode
+#' @note \itemize{
+#' \item Use function \code{\link{mp_get_routes}} to extract \code{sf} line layer where each feature is a \strong{route}
+#' \item Use function \code{\link{mp_get_segments}} to extract \code{sf} line layer where each feature is a \strong{route segment}
+#' }
+#' @references \url{https://developers.google.com/maps/documentation/directions/intro}
 #' @export
 #' @examples
 #' # Built-in reponse example

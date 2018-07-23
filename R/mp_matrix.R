@@ -13,14 +13,15 @@
 #' @param region The region code, specified as a ccTLD ("top-level domain") two-character value (e.g. \code{"es"} for Spain) (optional)
 #' @param key Google APIs key (optional)
 #' @return XML document with Google Maps Distance Matrix API response
-#' @note Function \code{\link{mp_get_matrix}} can be used to extract distance and duration matrices from returned object
+#' @note Use function \code{\link{mp_get_matrix}} to extract \strong{distance} and \strong{duration} \code{matrix} objects
+#' @references \url{https://developers.google.com/maps/documentation/distance-matrix/intro}
 #' @export
 #' @examples
 #' # Built-in reponse example
 #' library(xml2)
 #' doc = as_xml_document(response_matrix)
 #' \dontrun{
-#' Using 'data.frame' input
+#' # Using 'data.frame' input
 #' doc = mp_matrix(
 #'   origins = rbind(c(34.81127, 31.89277), c(35.212085, 31.769976)),
 #'   destinations = c(34.781107, 32.085003)

@@ -1,28 +1,58 @@
 #' Extract distance or duration *matrix* from a Google Maps Distance Matrix API response
 #' @param doc XML document with Google Maps Distance Matrix API response
-#' @param value Value to extract, one of: \code{"distance_m"} (default), \code{"distance_text"}, \code{"duration_s"}, \code{"duration_text"}
-#' @return \code{matrix}
+#' @param value Value to extract, one of: \code{"distance_m"} (default), \code{"distance_text"}, \code{"duration_s"}, \code{"duration_text"}, \code{"duration_in_traffic_s"}, \code{"duration_in_traffic_text"}
+#' @return A \code{matrix}, where rows represent origins and columns represent destinations. Matrix values are according to selected \code{value}, or \code{NA} if the ARI returned zero results
+#' @note The \code{"duration_in_traffic_s"} and \code{"duration_in_traffic_text"} options are only applicable when the API response contains these fields, i.e., when using \code{\link{mp_matrix}} with \code{mode="driving"}, with \code{departure_time} specified, and API key \code{key} provided
 #' @export
 #' @examples
+#'
 #' library(xml2)
 #' doc = as_xml_document(response_matrix)
 #' mp_get_matrix(doc, value = "distance_m")
 #' mp_get_matrix(doc, value = "distance_text")
 #' mp_get_matrix(doc, value = "duration_s")
 #' mp_get_matrix(doc, value = "duration_text")
+#'
 #' \dontrun{
-#' locations = c("Haifa", "Tel-Aviv", "Jerusalem", "Beer-Sheva")
+#'
+#' key = readLines("~/key") # Text file with API key
+#'
+#' locations = c("Tel-Aviv", "Jerusalem", "Neve Shalom")
+#'
+#' # Driving times
 #' doc = mp_matrix(
 #'   origins = locations,
-#'   destinations = locations
+#'   destinations = locations,
+#'   mode = "driving",
+#'   departure_time = Sys.time() + as.difftime(10, units = "mins"),
+#'   key = key
 #' )
 #' mp_get_matrix(doc, value = "distance_m")
 #' mp_get_matrix(doc, value = "distance_text")
 #' mp_get_matrix(doc, value = "duration_s")
 #' mp_get_matrix(doc, value = "duration_text")
+#' mp_get_matrix(doc, value = "duration_in_traffic_s")
+#' mp_get_matrix(doc, value = "duration_in_traffic_text")
+#'
+#' # Public transport times
+#' doc = mp_matrix(
+#'   origins = locations,
+#'   destinations = locations,
+#'   mode = "transit",
+#'   key = key
+#' )
+#' mp_get_matrix(doc, value = "distance_m")
+#' mp_get_matrix(doc, value = "distance_text")
+#' mp_get_matrix(doc, value = "duration_s")
+#' mp_get_matrix(doc, value = "duration_text")
+#'
 #' }
 
 mp_get_matrix = function(doc, value = "distance_m")  {
+
+  # Check 'value'
+  if(!value %in% c("distance_m", "distance_text", "duration_s", "duration_text", "duration_in_traffic_s", "duration_in_traffic_text"))
+    stop("Value must be one of: 'distance_m', 'distance_text', 'duration_s', 'duration_text', 'duration_in_traffic_s', 'duration_in_traffic_text'")
 
   rows =
     doc %>%
@@ -50,31 +80,46 @@ mp_get_matrix = function(doc, value = "distance_m")  {
 
       val = switch(value,
 
-    distance_m =
-      doc %>%
-      xml_find_all(sprintf("/DistanceMatrixResponse/row[%s]/element[%s]/distance/value", row, col)) %>%
-      xml_text %>%
-      as.numeric,
+        distance_m =
+          doc %>%
+          xml_find_all(sprintf("/DistanceMatrixResponse/row[%s]/element[%s]/distance/value", row, col)) %>%
+          xml_text %>%
+          as.numeric,
 
-    distance_text =
-      doc %>%
-      xml_find_all(sprintf("/DistanceMatrixResponse/row[%s]/element[%s]/distance/text", row, col)) %>%
-      xml_text,
+        distance_text =
+          doc %>%
+          xml_find_all(sprintf("/DistanceMatrixResponse/row[%s]/element[%s]/distance/text", row, col)) %>%
+          xml_text,
 
-    duration_s =
-      doc %>%
-      xml_find_all(sprintf("/DistanceMatrixResponse/row[%s]/element[%s]/duration/value", row, col)) %>%
-      xml_text %>%
-      as.numeric,
+        duration_s =
+          doc %>%
+          xml_find_all(sprintf("/DistanceMatrixResponse/row[%s]/element[%s]/duration/value", row, col)) %>%
+          xml_text %>%
+          as.numeric,
 
-    duration_text =
-      doc %>%
-      xml_find_all(sprintf("/DistanceMatrixResponse/row[%s]/element[%s]/duration/text", row, col)) %>%
-      xml_text
+        duration_text =
+          doc %>%
+          xml_find_all(sprintf("/DistanceMatrixResponse/row[%s]/element[%s]/duration/text", row, col)) %>%
+          xml_text,
+
+        duration_in_traffic_s =
+          doc %>%
+          xml_find_all(sprintf("/DistanceMatrixResponse/row[%s]/element[%s]/duration_in_traffic/value", row, col)) %>%
+          xml_text %>%
+          as.numeric,
+
+        duration_in_traffic_text =
+          doc %>%
+          xml_find_all(sprintf("/DistanceMatrixResponse/row[%s]/element[%s]/duration_in_traffic/text", row, col)) %>%
+          xml_text
 
       )
 
-    m[row, col] = val
+      # "Zero results"
+      if(length(val) == 0) val = NA
+
+      # Fill matrix value
+      m[row, col] = val
 
     }
 

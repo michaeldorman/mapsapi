@@ -1,13 +1,14 @@
 #' Get geocoded coordinates using the Google Maps Geocoding API
 #' @param addresses Addresses to geocode, as \code{character} vector
 #' @param region The region code, specified as a ccTLD ("top-level domain") two-character value (e.g. \code{"es"} for Spain). This can to be a character vector of length 1 (in which case it is replicated) or a character vector with the same length of \code{addresses} (optional)
-#' @param bounds A preferred bounding box, specified as a numeric vector with four values xmin/ymin/xmax/ymax (in latitude/longitude) representing the coordinates of the southwest and northeast corners, e.g. as returned by function `sf::st_bbox`. This can be a single vector (in which case it is replicated) or a \code{list} of numeric vectors with the same length as \codeP{addresses} (optional)
+#' @param bounds A preferred bounding box, specified as a numeric vector with four values xmin/ymin/xmax/ymax (in latitude/longitude) representing the coordinates of the southwest and northeast corners, e.g. as returned by function `sf::st_bbox`. This can be a single vector (in which case it is replicated) or a \code{list} of numeric vectors with the same length as \code{addresses} (optional)
 #' @param key Google APIs key (optional)
 #' @return \code{list} of XML documents with Google Maps Geocoding API responses, one item per element in \code{addresses}
 #' @note \itemize{
-#' \item Use function \strong{\code{\link{mp_get_points}}} to extract \strong{locations} as \code{sf} point layer
-#' \item Use function \strong{\code{\link{mp_get_bounds}}} to extract \strong{location bounds} as \code{sf} polygonal layer
+#' \item Use function \code{\link{mp_get_points}} to extract \strong{locations} as \code{sf} point layer
+#' \item Use function \code{\link{mp_get_bounds}} to extract \strong{location bounds} as \code{sf} polygonal layer
 #' }
+#' @references \url{https://developers.google.com/maps/documentation/geocoding/intro}
 #' @export
 #' @encoding UTF-8
 #' @examples
@@ -21,12 +22,17 @@
 #' \dontrun{
 #'
 #' # Basic use
-#' doc = mp_geocode(addresses = c("Rehovot", "Beer-Sheva", "New-York"))
+#' key = readLines("~/key") # Text file with API key
+#' addresses = c("Rehovot", "Beer-Sheva", "New-York")
+#' doc = mp_geocode(addresses) # without key
+#' doc = mp_geocode(addresses, key = key) # with key
+#' pnt = mp_get_points(doc)
+#' pnt
 #'
 #' # Using the 'region' parameter
-#' doc = mp_geocode(addresses = "Toledo")
+#' doc = mp_geocode(addresses = "Toledo", key = key)
 #' mp_get_points(doc)
-#' doc = mp_geocode(addresses = "Toledo", region = "es")
+#' doc = mp_geocode(addresses = "Toledo", region = "es", key = key)
 #' mp_get_points(doc)
 #'
 #' # Various addresses
@@ -38,16 +44,12 @@
 #'   "Arc de Triomphe de l'Etoile, Paris",
 #'   NA
 #' )
-#' doc = mp_geocode(addresses)
-#' pnt = mp_get_points(doc)
-#'
-#' # Using API key
-#' key = readLines("~/key") # Text file with API key
 #' doc = mp_geocode(addresses, key = key)
 #' pnt = mp_get_points(doc)
+#' pnt
 #'
 #' # Specifying a bounding box
-#' b = c(34.172684, -118.604794, 34.236144, -118.500938)
+#' b = c(-118.604794, 34.172684, -118.500938, 34.236144) # Bounds as xmin/ymin/xmax/ymax
 #' result = mp_geocode(addresses = "Winnetka", key = key)
 #' mp_get_points(result)
 #' result = mp_geocode(addresses = "Winnetka", bounds = b, key = key)
@@ -115,14 +117,18 @@ mp_geocode = function(
       }
 
       # Viewport/Bounding Box Biasing
-      # https://developers.google.com/maps/documentation/javascript/geocoding#GeocodingViewports
-      # expects the latitude/longitude coordinates of the southwest and northeast corners
-      # e.g. https://maps.googleapis.com/maps/api/geocode/json?address=Winnetka&bounds=34.172684,-118.604794|34.236144,-118.500938&key=YOUR_API_KEY
       if(!is.null(bounds)) {
         url = paste0(
           url,
           "&bounds=",
-          encode_bounds(bounds[[i]])
+          encode_bounds(
+            c(
+              bounds[[i]][2],
+              bounds[[i]][1],
+              bounds[[i]][4],
+              bounds[[i]][3]
+            )
+          )
         )
       }
 

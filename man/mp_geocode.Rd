@@ -5,12 +5,14 @@
 \alias{mp_geocode}
 \title{Get geocoded coordinates using the Google Maps Geocoding API}
 \usage{
-mp_geocode(addresses, region = NULL, key = NULL)
+mp_geocode(addresses, region = NULL, bounds = NULL, key = NULL)
 }
 \arguments{
 \item{addresses}{Addresses to geocode, as \code{character} vector}
 
-\item{region}{The region code, specified as a ccTLD ("top-level domain") two-character value (e.g. \code{"es"} for Spain) (optional)}
+\item{region}{The region code, specified as a ccTLD ("top-level domain") two-character value (e.g. \code{"es"} for Spain). This can to be a character vector of length 1 (in which case it is replicated) or a character vector with the same length of \code{addresses} (optional)}
+
+\item{bounds}{A preferred bounding box, specified as a numeric vector with four values xmin/ymin/xmax/ymax (in latitude/longitude) representing the coordinates of the southwest and northeast corners, e.g. as returned by function `sf::st_bbox`. This can be a single vector (in which case it is replicated) or a \code{list} of numeric vectors with the same length as \code{addresses} (optional)}
 
 \item{key}{Google APIs key (optional)}
 }
@@ -22,8 +24,8 @@ Get geocoded coordinates using the Google Maps Geocoding API
 }
 \note{
 \itemize{
-\item Use function \strong{\code{\link{mp_get_points}}} to extract \strong{locations} as \code{sf} point layer
-\item Use function \strong{\code{\link{mp_get_bounds}}} to extract \strong{location bounds} as \code{sf} polygonal layer
+\item Use function \code{\link{mp_get_points}} to extract \strong{locations} as \code{sf} point layer
+\item Use function \code{\link{mp_get_bounds}} to extract \strong{location bounds} as \code{sf} polygonal layer
 }
 }
 \examples{
@@ -37,12 +39,17 @@ bounds = mp_get_bounds(doc)
 \dontrun{
 
 # Basic use
-doc = mp_geocode(addresses = c("Rehovot", "Beer-Sheva", "New-York"))
+key = readLines("~/key") # Text file with API key
+addresses = c("Rehovot", "Beer-Sheva", "New-York")
+doc = mp_geocode(addresses) # without key
+doc = mp_geocode(addresses, key = key) # with key
+pnt = mp_get_points(doc)
+pnt
 
 # Using the 'region' parameter
-doc = mp_geocode(addresses = "Toledo")
+doc = mp_geocode(addresses = "Toledo", key = key)
 mp_get_points(doc)
-doc = mp_geocode(addresses = "Toledo", region = "es")
+doc = mp_geocode(addresses = "Toledo", region = "es", key = key)
 mp_get_points(doc)
 
 # Various addresses
@@ -54,13 +61,21 @@ addresses = c(
   "Arc de Triomphe de l'Etoile, Paris",
   NA
 )
-doc = mp_geocode(addresses)
-pnt = mp_get_points(doc)
-
-# Using API key
-key = readLines("~/key") # Text file with API key
 doc = mp_geocode(addresses, key = key)
 pnt = mp_get_points(doc)
+pnt
+
+# Specifying a bounding box
+b = c(-118.604794, 34.172684, -118.500938, 34.236144) # Bounds as xmin/ymin/xmax/ymax
+result = mp_geocode(addresses = "Winnetka", key = key)
+mp_get_points(result)
+result = mp_geocode(addresses = "Winnetka", bounds = b, key = key)
+mp_get_points(result)
+result = mp_geocode(addresses = rep("Winnetka", 3), bounds = list(b, NA, b), key = key)
+mp_get_points(result)
 
 }
+}
+\references{
+\url{https://developers.google.com/maps/documentation/geocoding/intro}
 }

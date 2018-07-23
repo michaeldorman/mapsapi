@@ -37,14 +37,14 @@ XML document with Google Maps Distance Matrix API response
 Get distance matrix from the Google Maps Distance Matrix API
 }
 \note{
-Function \code{\link{mp_get_matrix}} can be used to extract distance and duration matrices from returned object
+Use function \code{\link{mp_get_matrix}} to extract \strong{distance} and \strong{duration} \code{matrix} objects
 }
 \examples{
 # Built-in reponse example
 library(xml2)
 doc = as_xml_document(response_matrix)
 \dontrun{
-Using 'data.frame' input
+# Using 'data.frame' input
 doc = mp_matrix(
   origins = rbind(c(34.81127, 31.89277), c(35.212085, 31.769976)),
   destinations = c(34.781107, 32.085003)
@@ -56,4 +56,7 @@ doc = mp_matrix(
   destinations = locations
 )
 }
+}
+\references{
+\url{https://developers.google.com/maps/documentation/distance-matrix/intro}
 }
