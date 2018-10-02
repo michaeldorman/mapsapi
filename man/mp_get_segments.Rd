@@ -24,13 +24,29 @@ doc = as_xml_document(response_directions_transit)
 seg = mp_get_segments(doc)
 plot(seg)
 \dontrun{
+
 # Transit example
+key = readLines("~/key") # API key
 doc = mp_directions(
   origin = c(34.81127, 31.89277),
   destination = c(34.781107, 32.085003),
   mode = "transit",
   alternatives = TRUE,
+  key = key
 )
 seg = mp_get_segments(doc)
+plot(seg)
+
+# Using waypoints
+doc = mp_directions(
+  origin = c(34.81127, 31.89277),
+  waypoints = rbind(c(35.01582, 31.90020), c(34.84246, 31.85356)),
+  destination = c(34.781107, 32.085003),
+  alternatives = TRUE,
+  key = key
+)
+r = mp_get_segments(doc)
+plot(r)
+
 }
 }

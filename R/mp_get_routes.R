@@ -4,13 +4,17 @@
 #' @export
 #' @examples
 #' library(xml2)
+#'
 #' doc = as_xml_document(response_directions_driving)
 #' r = mp_get_routes(doc)
 #' plot(r)
+#'
 #' doc = as_xml_document(response_directions_transit)
 #' r = mp_get_routes(doc)
 #' plot(r)
+#'
 #' \dontrun{
+#'
 #' # Duration in traffic (only with API key)
 #' key = readLines("~/key") # API key
 #' doc = mp_directions(
@@ -22,6 +26,17 @@
 #' )
 #' r = mp_get_routes(doc)
 #' plot(r)
+#'
+#' # Using waypoints
+#' doc = mp_directions(
+#'   origin = c(34.81127, 31.89277),
+#'   waypoints = rbind(c(35.01582, 31.90020), c(34.84246, 31.85356)),
+#'   destination = c(34.781107, 32.085003),
+#'   key = key
+#' )
+#' r = mp_get_routes(doc)
+#' plot(r)
+#'
 #' }
 
 mp_get_routes = function(doc)  {
@@ -50,23 +65,27 @@ mp_get_routes = function(doc)  {
       doc %>%
       xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg/distance/value", i)) %>%
       xml_text %>%
-      as.numeric
+      as.numeric %>%
+      sum
 
     distance_text =
       doc %>%
       xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg/distance/text", i)) %>%
-      xml_text
+      xml_text %>%
+      paste(collapse = "|")
 
     duration_s =
       doc %>%
       xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg/duration/value", i)) %>%
       xml_text %>%
-      as.numeric
+      as.numeric %>%
+      sum
 
     duration_text =
       doc %>%
       xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg/duration/text", i)) %>%
-      xml_text
+      xml_text %>%
+      paste(collapse = "|")
 
     duration_in_traffic_s =
       doc %>%
@@ -75,6 +94,8 @@ mp_get_routes = function(doc)  {
       as.numeric
     if(length(duration_in_traffic_s) == 0)
       duration_in_traffic_s = NA
+    if(length(duration_in_traffic_s) > 1)
+      duration_in_traffic_s = sum(duration_in_traffic_s)
 
     duration_in_traffic_text =
       doc %>%
@@ -82,6 +103,8 @@ mp_get_routes = function(doc)  {
       xml_text
     if(length(duration_in_traffic_text) == 0)
       duration_in_traffic_text = NA
+    if(length(duration_in_traffic_text) > 1)
+      duration_in_traffic_text = paste(duration_in_traffic_text, collapse = "|")
 
     rt = lapply(route, decode_line)
     rt = lapply(rt, sf::st_linestring)

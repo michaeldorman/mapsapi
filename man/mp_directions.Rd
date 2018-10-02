@@ -4,9 +4,10 @@
 \alias{mp_directions}
 \title{Get directions from the Google Maps Directions API}
 \usage{
-mp_directions(origin, destination, mode = c("driving", "transit", "walking",
-  "bicycling"), arrival_time = NULL, departure_time = NULL,
-  alternatives = FALSE, avoid = NULL, region = NULL, key = NULL)
+mp_directions(origin, waypoints = NULL, destination,
+  mode = c("driving", "transit", "walking", "bicycling"),
+  arrival_time = NULL, departure_time = NULL, alternatives = FALSE,
+  avoid = NULL, region = NULL, key = NULL)
 }
 \arguments{
 \item{origin}{Origin, as \itemize{
@@ -14,6 +15,13 @@ mp_directions(origin, destination, mode = c("driving", "transit", "walking",
 \item{\code{numeric} vector of length two (lon, lat)}
 \item{\code{matrix} with one row and two columns (lon, lat)}
 \item{\code{sf} or \code{sfc} point layer with one feature}
+}}
+
+\item{waypoints}{Waypoints, in one of the same formats as for \code{origins} but possibly with more than one location, i.e. \itemize{
+\item{\code{character} vector with addresses to be geocoded}
+\item{\code{numeric} vector of length two (lon, lat)}
+\item{\code{matrix} with two columns (lon, lat)}
+\item{\code{sf} or \code{sfc} point layer}
 }}
 
 \item{destination}{Destination, in one of the same formats as for \code{origins}}
@@ -50,13 +58,16 @@ library(xml2)
 doc = as_xml_document(response_directions_driving)
 r = mp_get_routes(doc)
 seg = mp_get_segments(doc)
+
 \dontrun{
+
 # Using 'numeric' input
 doc = mp_directions(
   origin = c(34.81127, 31.89277),
   destination = c(34.781107, 32.085003),
   alternatives = TRUE
 )
+
 # Using 'character' and 'sf' input
 library(magrittr); library(sf)
 doc = mp_directions(

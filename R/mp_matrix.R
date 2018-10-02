@@ -20,12 +20,15 @@
 #' # Built-in reponse example
 #' library(xml2)
 #' doc = as_xml_document(response_matrix)
+#'
 #' \dontrun{
+#'
 #' # Using 'data.frame' input
 #' doc = mp_matrix(
 #'   origins = rbind(c(34.81127, 31.89277), c(35.212085, 31.769976)),
 #'   destinations = c(34.781107, 32.085003)
 #' )
+#'
 #' # Using 'character' input
 #' locations = c("Haifa", "Tel-Aviv", "Jerusalem", "Beer-Sheva")
 #' doc = mp_matrix(

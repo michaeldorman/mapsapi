@@ -4,21 +4,40 @@
 #' @export
 #' @examples
 #' library(xml2)
+
 #' doc = as_xml_document(response_directions_driving)
 #' seg = mp_get_segments(doc)
 #' plot(seg)
+
 #' doc = as_xml_document(response_directions_transit)
 #' seg = mp_get_segments(doc)
 #' plot(seg)
+
 #' \dontrun{
+#'
 #' # Transit example
+#' key = readLines("~/key") # API key
 #' doc = mp_directions(
 #'   origin = c(34.81127, 31.89277),
 #'   destination = c(34.781107, 32.085003),
 #'   mode = "transit",
 #'   alternatives = TRUE,
+#'   key = key
 #' )
 #' seg = mp_get_segments(doc)
+#' plot(seg)
+#'
+#' # Using waypoints
+#' doc = mp_directions(
+#'   origin = c(34.81127, 31.89277),
+#'   waypoints = rbind(c(35.01582, 31.90020), c(34.84246, 31.85356)),
+#'   destination = c(34.781107, 32.085003),
+#'   alternatives = TRUE,
+#'   key = key
+#' )
+#' r = mp_get_segments(doc)
+#' plot(r)
+#'
 #' }
 
 mp_get_segments = function(doc)  {
@@ -38,92 +57,103 @@ mp_get_segments = function(doc)  {
       xml_find_all(sprintf("/DirectionsResponse/route[%s]/summary", i)) %>%
       xml_text
 
-    # Count steps per alternative
-    steps =
+    # Count legs
+    legs =
       doc %>%
-      xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg/step", i)) %>%
+      xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg", i)) %>%
       length
 
-    for(j in 1:steps) {
+    for(l in 1:legs) {
 
-      travel_mode =
-        doc %>%
-        xml_find_all(sprintf(
-          "/DirectionsResponse/route[%s]/leg/step[%s]/travel_mode"
-          , i, j)) %>%
-        xml_text %>%
-        tolower
+        # Count steps per alternative per leg
+        steps =
+          doc %>%
+          xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/step", i, l)) %>%
+          length
 
-      step =
-        doc %>%
-        xml_find_all(sprintf(
-          "/DirectionsResponse/route[%s]/leg/step[%s]/polyline/points",
-          i, j)) %>%
-        xml_text
+        for(j in 1:steps) {
 
-      instructions =
-        doc %>%
-        xml_find_all(sprintf(
-          "/DirectionsResponse/route[%s]/leg/step[%s]/html_instructions"
-          , i, j)) %>%
-        xml_text
+          travel_mode =
+            doc %>%
+            xml_find_all(sprintf(
+              "/DirectionsResponse/route[%s]/leg[%s]/step[%s]/travel_mode"
+              , i, l, j)) %>%
+            xml_text %>%
+            tolower
 
-      distance_m =
-        doc %>%
-        xml_find_all(sprintf(
-          "/DirectionsResponse/route[%s]/leg/step[%s]/distance/value"
-          , i, j)) %>%
-        xml_text %>%
-        as.numeric
+          step =
+            doc %>%
+            xml_find_all(sprintf(
+              "/DirectionsResponse/route[%s]/leg[%s]/step[%s]/polyline/points",
+              i, l, j)) %>%
+            xml_text
 
-      distance_text =
-        doc %>%
-        xml_find_all(sprintf(
-          "/DirectionsResponse/route[%s]/leg/step[%s]/distance/text"
-          , i, j)) %>%
-        xml_text
+          instructions =
+            doc %>%
+            xml_find_all(sprintf(
+              "/DirectionsResponse/route[%s]/leg[%s]/step[%s]/html_instructions"
+              , i, l, j)) %>%
+            xml_text
 
-      duration_s =
-        doc %>%
-        xml_find_all(sprintf(
-          "/DirectionsResponse/route[%s]/leg/step[%s]/duration/value"
-          , i, j)) %>%
-        xml_text %>%
-        as.numeric
+          distance_m =
+            doc %>%
+            xml_find_all(sprintf(
+              "/DirectionsResponse/route[%s]/leg[%s]/step[%s]/distance/value"
+              , i, l, j)) %>%
+            xml_text %>%
+            as.numeric
 
-      duration_text =
-        doc %>%
-        xml_find_all(sprintf(
-          "/DirectionsResponse/route[%s]/leg/step[%s]/duration/text"
-          , i, j)) %>%
-        xml_text
+          distance_text =
+            doc %>%
+            xml_find_all(sprintf(
+              "/DirectionsResponse/route[%s]/leg[%s]/step[%s]/distance/text"
+              , i, l, j)) %>%
+            xml_text
 
-      departure_stop_name =
-        doc %>%
-        xml_find_all(sprintf(
-          "/DirectionsResponse/route[%s]/leg/step[%s]/transit_details/departure_stop/name",
-          i, j)) %>%
-        xml_text
+          duration_s =
+            doc %>%
+            xml_find_all(sprintf(
+              "/DirectionsResponse/route[%s]/leg[%s]/step[%s]/duration/value"
+              , i, l, j)) %>%
+            xml_text %>%
+            as.numeric
 
-      rt = decode_line(step)
-      rt = sf::st_linestring(rt)
-      rt = sf::st_sfc(rt, crs = 4326)
+          duration_text =
+            doc %>%
+            xml_find_all(sprintf(
+              "/DirectionsResponse/route[%s]/leg[%s]/step[%s]/duration/text"
+              , i, l, j)) %>%
+            xml_text
 
-      routes[[paste(i, j, sep = "-")]] = sf::st_sf(
-        alternative_id = i,
-        segment_id = j,
-        summary = summary,
-        travel_mode = travel_mode,
-        instructions = instructions,
-        distance_m = distance_m,
-        distance_text = distance_text,
-        duration_s = duration_s,
-        duration_text = duration_text,
-        geometry = rt,
-        stringsAsFactors = FALSE
-      )
+          departure_stop_name =
+            doc %>%
+            xml_find_all(sprintf(
+              "/DirectionsResponse/route[%s]/leg[%s]/step[%s]/transit_details/departure_stop/name",
+              i, l, j)) %>%
+            xml_text
 
-    }
+          rt = decode_line(step)
+          rt = sf::st_linestring(rt)
+          rt = sf::st_sfc(rt, crs = 4326)
+
+          routes[[paste(i, l, j, sep = "-")]] = sf::st_sf(
+            alternative_id = i,
+            leg_id = l,
+            segment_id = j,
+            summary = summary,
+            travel_mode = travel_mode,
+            instructions = instructions,
+            distance_m = distance_m,
+            distance_text = distance_text,
+            duration_s = duration_s,
+            duration_text = duration_text,
+            geometry = rt,
+            stringsAsFactors = FALSE
+          )
+
+        }
+
+  }
 
   }
 

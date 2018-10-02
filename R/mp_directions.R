@@ -5,6 +5,12 @@
 #' \item{\code{matrix} with one row and two columns (lon, lat)}
 #' \item{\code{sf} or \code{sfc} point layer with one feature}
 #' }
+#' @param waypoints Waypoints, in one of the same formats as for \code{origins} but possibly with more than one location, i.e. \itemize{
+#' \item{\code{character} vector with addresses to be geocoded}
+#' \item{\code{numeric} vector of length two (lon, lat)}
+#' \item{\code{matrix} with two columns (lon, lat)}
+#' \item{\code{sf} or \code{sfc} point layer}
+#' }
 #' @param destination Destination, in one of the same formats as for \code{origins}
 #' @param mode Travel mode, one of: \code{"driving"} (default), \code{"transit"}, \code{"walking"}, \code{"bicycling"}
 #' @param arrival_time The desired time of arrival for transit directions, as \code{POSIXct}
@@ -26,13 +32,16 @@
 #' doc = as_xml_document(response_directions_driving)
 #' r = mp_get_routes(doc)
 #' seg = mp_get_segments(doc)
+#'
 #' \dontrun{
+#'
 #' # Using 'numeric' input
 #' doc = mp_directions(
 #'   origin = c(34.81127, 31.89277),
 #'   destination = c(34.781107, 32.085003),
 #'   alternatives = TRUE
 #' )
+#'
 #' # Using 'character' and 'sf' input
 #' library(magrittr); library(sf)
 #' doc = mp_directions(
@@ -44,6 +53,7 @@
 
 mp_directions = function(
   origin,
+  waypoints = NULL,
   destination,
   mode = c("driving", "transit", "walking", "bicycling"),
   arrival_time = NULL,
@@ -75,6 +85,16 @@ mp_directions = function(
     mode[1],
     "&alternatives=",
     tolower(alternatives))
+
+  # Add 'waypoints'
+  if(!is.null(waypoints)) {
+    waypoints = encode_locations(waypoints, single = FALSE)
+    url = paste0(
+      url,
+      "&waypoints=optimize:true|",
+      waypoints
+    )
+  }
 
   # Add 'arrival_time'
   if(!is.null(arrival_time)) {
