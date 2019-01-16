@@ -45,7 +45,8 @@ mp_matrix = function(
   departure_time = NULL,
   avoid = NULL,
   region = NULL,
-  key = NULL
+  key = NULL,
+  quiet = FALSE
   ) {
 
   # Checks
@@ -113,6 +114,9 @@ mp_matrix = function(
       key
     )
   }
+
+  # Print URL
+  if(!quiet) message(url)
 
   # Get response
   url = utils::URLencode(url)

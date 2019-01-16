@@ -61,19 +61,24 @@ seg = mp_get_segments(doc)
 
 \dontrun{
 
+# Text file with API key
+key = readLines("~/key")
+
 # Using 'numeric' input
 doc = mp_directions(
   origin = c(34.81127, 31.89277),
   destination = c(34.781107, 32.085003),
-  alternatives = TRUE
+  alternatives = TRUE,
+  key = key
 )
 
 # Using 'character' and 'sf' input
-library(magrittr); library(sf)
+library(sf)
 doc = mp_directions(
   origin = "Beer-Sheva",
   destination = c(34.781107, 32.085003) \%>\% st_point \%>\% st_sfc(crs = 4326),
-  alternatives = TRUE
+  alternatives = TRUE,
+  key = key
 )
 }
 }

@@ -21,8 +21,10 @@
 #'
 #' \dontrun{
 #'
+#' # Text file with API key
+#' key = readLines("~/key")
+#'
 #' # Basic use
-#' key = readLines("~/key") # Text file with API key
 #' addresses = c("Rehovot", "Beer-Sheva", "New-York")
 #' doc = mp_geocode(addresses) # without key
 #' doc = mp_geocode(addresses, key = key) # with key

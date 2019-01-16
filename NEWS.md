@@ -30,7 +30,12 @@
 # mapsapi 0.3.9
 
 * Support for "waypoints" parameter in 'mp_directions' and 'ms_get_segments'
+* 'mp_routes' now returns empty LINESTRING when 'doc' contains no route alternatives ('ZERO_RESULTS')
+* Added 'quiet' parameter to 'mp_directions' and 'mp_matrix' to hide API key when necessary
 
+# To add
 
+* Add 'address type' (geocode accuracy) field for 'mp_get_points'
+* Get static map images (?)
 
 

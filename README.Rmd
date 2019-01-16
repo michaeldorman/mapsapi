@@ -48,16 +48,23 @@ devtools::install_github("michaeldorman/mapsapi")
 
 ## Example
 
-The following code section obtains (and plots) the driving directions from New-York to Los Angeles - 
+The following code section obtains (and plots) the driving directions from New-York to Los Angeles. 
+
+**Note: due to [new Google Maps API policy](https://developers.google.com/maps/billing/important-updates), starting from June 2018 the functions require an API key.**
 
 ```{r example}
 library(mapsapi)
+
+# Google API key
+key = readLines("~/key")
 
 # Get routes (XML document)
 doc = mp_directions(
   origin = "New-York",
   destination = "Los Angeles",
-  alternatives = TRUE
+  alternatives = TRUE,
+  key = key, 
+  quiet = TRUE
 )
 
 # Extract lines 'sf' layer

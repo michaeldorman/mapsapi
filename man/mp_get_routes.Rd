@@ -10,7 +10,9 @@ mp_get_routes(doc)
 \item{doc}{XML document with Google Maps Directions API response}
 }
 \value{
-Line layer (class \code{sf}) representing routes
+Line layer (class \code{sf}) representing routes.
+
+When document contains no routes ("ZERO_RESULTS" status), the funtion returns an empty line layer with \code{NA} in all fields.
 }
 \description{
 Extract *routes* from Google Maps Directions API response
@@ -28,8 +30,10 @@ plot(r)
 
 \dontrun{
 
+# Text file with API key
+key = readLines("~/key")
+
 # Duration in traffic (only with API key)
-key = readLines("~/key") # API key
 doc = mp_directions(
   origin = c(34.81127, 31.89277),
   destination = c(34.781107, 32.085003),
