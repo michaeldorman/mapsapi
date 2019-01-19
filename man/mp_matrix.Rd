@@ -6,7 +6,7 @@
 \usage{
 mp_matrix(origins, destinations, mode = c("driving", "transit",
   "walking", "bicycling"), arrival_time = NULL, departure_time = NULL,
-  avoid = NULL, region = NULL, key = NULL)
+  avoid = NULL, region = NULL, key = NULL, quiet = FALSE)
 }
 \arguments{
 \item{origins}{Origins, as \itemize{
@@ -29,6 +29,8 @@ mp_matrix(origins, destinations, mode = c("driving", "transit",
 \item{region}{The region code, specified as a ccTLD ("top-level domain") two-character value (e.g. \code{"es"} for Spain) (optional)}
 
 \item{key}{Google APIs key (optional)}
+
+\item{quiet}{Logical; suppress printing URL for Google Maps API call (e.g. to hide API key)}
 }
 \value{
 XML document with Google Maps Distance Matrix API response
