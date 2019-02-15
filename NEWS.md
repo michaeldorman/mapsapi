@@ -27,15 +27,19 @@
 * Added 'duration_in_traffic' option in 'mp_get_matrix'
 * 'mp_matrix' now returns 'NA' when there are zero results
 
-# mapsapi 0.3.9
+# mapsapi 0.3.9 (2019-01-19)
 
 * Support for "waypoints" parameter in 'mp_directions' and 'ms_get_segments'
 * 'mp_routes' now returns empty LINESTRING when 'doc' contains no route alternatives ('ZERO_RESULTS')
 * Added 'quiet' parameter to 'mp_directions' and 'mp_matrix' to hide API from text key when necessary
 
+# mapsapi 0.4.0
+
+* Added 'address_type' (geocode accuracy) field for 'mp_get_points'
+* Added 'departure_time' and 'arrival_time' fields for 'mp_get_routes' and 'mp_get_segments'
+
 # To add
 
-* Add 'address type' (geocode accuracy) field for 'mp_get_points'
 * Get static map images (?)
 
 

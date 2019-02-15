@@ -33,7 +33,18 @@ plot(r)
 # Text file with API key
 key = readLines("~/key")
 
-# Duration in traffic (only with API key)
+# Transit example
+doc = mp_directions(
+  origin = c(34.81127, 31.89277),
+  destination = c(34.781107, 32.085003),
+  mode = "transit",
+  alternatives = TRUE,
+  key = key
+)
+r = mp_get_routes(doc)
+plot(r)
+
+# Duration in traffic
 doc = mp_directions(
   origin = c(34.81127, 31.89277),
   destination = c(34.781107, 32.085003),

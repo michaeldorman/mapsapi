@@ -43,6 +43,12 @@ mp_get_points = function(doc, all_results = FALSE)  {
         xml2::xml_find_all("/GeocodeResponse/result/formatted_address") %>%
         xml2::xml_text()
 
+      # Location type
+      location_type =
+        doc[[i]] %>%
+        xml2::xml_find_all("/GeocodeResponse/result/geometry/location_type") %>%
+        xml2::xml_text()
+
       # Coordinates
       lon =
         doc[[i]] %>%
@@ -77,6 +83,7 @@ mp_get_points = function(doc, all_results = FALSE)  {
         status = status,
         address = names(doc)[i],
         address_google = address_google,
+        location_type = location_type,
         stringsAsFactors = FALSE
       ),
       pnt

@@ -16,17 +16,23 @@ Line layer (class \code{sf}) representing route segments
 Extract *route segments* from a Google Maps Directions API response
 }
 \examples{
+
 library(xml2)
+
 doc = as_xml_document(response_directions_driving)
 seg = mp_get_segments(doc)
 plot(seg)
+
 doc = as_xml_document(response_directions_transit)
 seg = mp_get_segments(doc)
 plot(seg)
+
 \dontrun{
 
+# Text file with API key
+key = readLines("~/key")
+
 # Transit example
-key = readLines("~/key") # API key
 doc = mp_directions(
   origin = c(34.81127, 31.89277),
   destination = c(34.781107, 32.085003),
@@ -45,8 +51,8 @@ doc = mp_directions(
   alternatives = TRUE,
   key = key
 )
-r = mp_get_segments(doc)
-plot(r)
+seg = mp_get_segments(doc)
+plot(seg)
 
 }
 }

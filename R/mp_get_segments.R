@@ -3,20 +3,23 @@
 #' @return Line layer (class \code{sf}) representing route segments
 #' @export
 #' @examples
+#'
 #' library(xml2)
-
+#'
 #' doc = as_xml_document(response_directions_driving)
 #' seg = mp_get_segments(doc)
 #' plot(seg)
-
+#'
 #' doc = as_xml_document(response_directions_transit)
 #' seg = mp_get_segments(doc)
 #' plot(seg)
-
+#'
 #' \dontrun{
 #'
+#' # Text file with API key
+#' key = readLines("~/key")
+#'
 #' # Transit example
-#' key = readLines("~/key") # API key
 #' doc = mp_directions(
 #'   origin = c(34.81127, 31.89277),
 #'   destination = c(34.781107, 32.085003),
@@ -35,8 +38,8 @@
 #'   alternatives = TRUE,
 #'   key = key
 #' )
-#' r = mp_get_segments(doc)
-#' plot(r)
+#' seg = mp_get_segments(doc)
+#' plot(seg)
 #'
 #' }
 
@@ -95,6 +98,7 @@ mp_get_segments = function(doc)  {
               , i, l, j)) %>%
             xml_text
 
+          # Duration
           distance_m =
             doc %>%
             xml_find_all(sprintf(
@@ -102,14 +106,12 @@ mp_get_segments = function(doc)  {
               , i, l, j)) %>%
             xml_text %>%
             as.numeric
-
           distance_text =
             doc %>%
             xml_find_all(sprintf(
               "/DirectionsResponse/route[%s]/leg[%s]/step[%s]/distance/text"
               , i, l, j)) %>%
             xml_text
-
           duration_s =
             doc %>%
             xml_find_all(sprintf(
@@ -117,7 +119,6 @@ mp_get_segments = function(doc)  {
               , i, l, j)) %>%
             xml_text %>%
             as.numeric
-
           duration_text =
             doc %>%
             xml_find_all(sprintf(
@@ -125,12 +126,45 @@ mp_get_segments = function(doc)  {
               , i, l, j)) %>%
             xml_text
 
-          departure_stop_name =
+          # Departure & arrival time
+          departure_time =
             doc %>%
             xml_find_all(sprintf(
-              "/DirectionsResponse/route[%s]/leg[%s]/step[%s]/transit_details/departure_stop/name",
+              "/DirectionsResponse/route[%s]/leg[%s]/step[%s]/transit_details/departure_time/value",
               i, l, j)) %>%
             xml_text
+          if(length(departure_time) == 0) {
+            departure_time = as.POSIXct(NA)} else {
+              departure_time = as.numeric(departure_time)
+              departure_time = as.POSIXct(departure_time, tz = "UTC", origin = as.POSIXct("1970-01-01 00:00:00", tz = "UTC"))
+              time_zone =
+                doc %>%
+                xml_find_all(sprintf(
+                  "/DirectionsResponse/route[%s]/leg[%s]/step[%s]/transit_details/departure_time/time_zone",
+                  i, l, j)) %>%
+                xml_text
+              departure_time = format(departure_time, tz = time_zone)
+              departure_time = as.POSIXct(departure_time, tz = time_zone)
+            }
+          arrival_time =
+            doc %>%
+            xml_find_all(sprintf(
+              "/DirectionsResponse/route[%s]/leg[%s]/step[%s]/transit_details/arrival_time/value",
+              i, l, j)) %>%
+            xml_text
+          if(length(arrival_time) == 0) {
+            arrival_time = as.POSIXct(NA)} else {
+              arrival_time = as.numeric(arrival_time)
+              arrival_time = as.POSIXct(arrival_time, tz = "UTC", origin = as.POSIXct("1970-01-01 00:00:00", tz = "UTC"))
+              time_zone =
+                doc %>%
+                xml_find_all(sprintf(
+                  "/DirectionsResponse/route[%s]/leg[%s]/step[%s]/transit_details/arrival_time/time_zone",
+                  i, l, j)) %>%
+                xml_text
+              arrival_time = format(arrival_time, tz = time_zone)
+              arrival_time = as.POSIXct(arrival_time, tz = time_zone)
+            }
 
           rt = decode_line(step)
           rt = sf::st_linestring(rt)
@@ -147,6 +181,8 @@ mp_get_segments = function(doc)  {
             distance_text = distance_text,
             duration_s = duration_s,
             duration_text = duration_text,
+            departure_time = departure_time,
+            arrival_time = arrival_time,
             geometry = rt,
             stringsAsFactors = FALSE
           )
