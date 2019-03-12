@@ -18,7 +18,7 @@
 #' \dontrun{
 #'
 #' # Text file with API key
-#' key = readLines("~/key")
+#' key = readLines("~/Dropbox/BGU/key_google")
 #'
 #' # Transit example
 #' doc = mp_directions(
