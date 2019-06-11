@@ -73,6 +73,7 @@ mp_get_points = function(doc, all_results = FALSE)  {
 
       # Empty attributes
       address_google = NA
+      location_type = NA
 
     }
 

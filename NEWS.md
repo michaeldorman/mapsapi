@@ -30,13 +30,17 @@
 ## mapsapi 0.3.9 (2019-01-19)
 
 * Support for "waypoints" parameter in 'mp_directions' and 'ms_get_segments'
-* 'mp_routes' now returns empty LINESTRING when 'doc' contains no route alternatives ('ZERO_RESULTS')
+* 'mp_get_routes' now returns empty LINESTRING when 'doc' contains no route alternatives ('ZERO_RESULTS')
 * Added 'quiet' parameter to 'mp_directions' and 'mp_matrix' to hide API from text key when necessary
 
 ## mapsapi 0.4.0 (2019-04-06)
 
 * Added 'address_type' (geocode accuracy) field for 'mp_get_points'
 * Added 'departure_time' and 'arrival_time' fields for 'mp_get_routes' and 'mp_get_segments'
+
+## mapsapi 0.4.1
+
+* 'mp_get_points' now returns empty POINT when 'doc' contains geocode results ('ZERO_RESULTS')
 
 ## To add
 
