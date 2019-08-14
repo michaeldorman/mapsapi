@@ -3,7 +3,7 @@
 #' @param region The region code, specified as a ccTLD ("top-level domain") two-character value (e.g. \code{"es"} for Spain). This can to be a character vector of length 1 (in which case it is replicated) or a character vector with the same length of \code{addresses} (optional)
 #' @param bounds A preferred bounding box, specified as a numeric vector with four values xmin/ymin/xmax/ymax (in latitude/longitude) representing the coordinates of the southwest and northeast corners, e.g. as returned by function `sf::st_bbox`. This can be a single vector (in which case it is replicated) or a \code{list} of numeric vectors with the same length as \code{addresses} (optional)
 #' @param key Google APIs key (optional)
-#' @param postcode Postal codes to filter the address match by (optional). Note that this is a component filter, which means that for each address, Google will search only within the corresponding postal code if nonmissing.
+#' @param postcode Vector of postal codes to filter the address match by (optional); Note that this is a component filter, which means that for each address, Google will search only within the corresponding postal code if nonmissing
 #' @return \code{list} of XML documents with Google Maps Geocoding API responses, one item per element in \code{addresses}
 #' @note \itemize{
 #' \item Use function \code{\link{mp_get_points}} to extract \strong{locations} as \code{sf} point layer

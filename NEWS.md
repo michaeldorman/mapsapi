@@ -38,7 +38,7 @@
 * Added 'address_type' (geocode accuracy) field for 'mp_get_points'
 * Added 'departure_time' and 'arrival_time' fields for 'mp_get_routes' and 'mp_get_segments'
 
-## mapsapi 0.4.1
+## mapsapi 0.4.1 (2019-06-14)
 
 * 'mp_get_points' now returns empty POINT when 'doc' contains geocode results ('ZERO_RESULTS')
 

@@ -5,7 +5,8 @@ Version: 0.4.1
 Authors@R: c(
     person("Michael", "Dorman", email = "dorman@post.bgu.ac.il", role = c("aut", "cre")),
     person("Tom", "Buckley", role = c("ctb")),
-    person("Alex", "Dannenberg", role = c("ctb")))
+    person("Alex", "Dannenberg", role = c("ctb")),
+    person("Mihir", "Bhaskar", role = c("ctb")))
 Description: Interface to the 'Google Maps' APIs: (1) routing directions based on the 'Directions' API, returned as 'sf' objects, either as single feature per alternative route, or a single feature per segment per alternative route; (2) travel distance or time matrices based on the 'Distance Matrix' API; (3) geocoded locations based on the 'Geocode' API, returned as 'sf' objects, either points or bounds.
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -16,7 +17,7 @@ Imports:
     sf (>= 0.5-3),
     bitops (>= 1.0-6),
     plyr (>= 1.8.4)
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Suggests: 
     knitr,
     rmarkdown,
