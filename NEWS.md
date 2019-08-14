@@ -42,6 +42,10 @@
 
 * 'mp_get_points' now returns empty POINT when 'doc' contains geocode results ('ZERO_RESULTS')
 
+## mapsapi 0.4.2
+
+* New 'postcode' parameter in 'mp_geocode'
+
 ## To add
 
 * Get static map images (?)
