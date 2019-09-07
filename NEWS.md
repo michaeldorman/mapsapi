@@ -44,7 +44,7 @@
 
 ## mapsapi 0.4.2
 
-* New 'postcode' parameter in 'mp_geocode'
+* Added 'postcode' parameter in 'mp_geocode'
 
 ## To add
 
