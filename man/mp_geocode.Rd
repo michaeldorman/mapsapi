@@ -5,8 +5,7 @@
 \alias{mp_geocode}
 \title{Get geocoded coordinates using the Google Maps Geocoding API}
 \usage{
-mp_geocode(addresses, region = NULL, postcode = NULL, bounds = NULL,
-  key = NULL)
+mp_geocode(addresses, region = NULL, postcode = NULL, bounds = NULL, key)
 }
 \arguments{
 \item{addresses}{Addresses to geocode, as \code{character} vector}

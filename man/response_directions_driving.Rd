@@ -4,7 +4,9 @@
 \name{response_directions_driving}
 \alias{response_directions_driving}
 \title{Sample response from Google Maps Directions API}
-\format{A \code{character} vector of length one}
+\format{
+A \code{character} vector of length one
+}
 \usage{
 response_directions_driving
 }

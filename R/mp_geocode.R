@@ -67,7 +67,7 @@ mp_geocode = function(
   region = NULL,
   postcode = NULL,
   bounds = NULL,
-  key = NULL
+  key
   ) {
 
   # Checks

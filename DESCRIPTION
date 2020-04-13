@@ -1,27 +1,29 @@
 Package: mapsapi
 Type: Package
-Title: 'sf'-Compatible Interface to 'Google Maps' APIs  
-Version: 0.4.2
+Title: 'sf'-Compatible Interface to 'Google Maps' APIs
+Version: 0.4.5
 Authors@R: c(
     person("Michael", "Dorman", email = "dorman@post.bgu.ac.il", role = c("aut", "cre")),
     person("Tom", "Buckley", role = c("ctb")),
     person("Alex", "Dannenberg", role = c("ctb")),
     person("Mihir", "Bhaskar", role = c("ctb")))
-Description: Interface to the 'Google Maps' APIs: (1) routing directions based on the 'Directions' API, returned as 'sf' objects, either as single feature per alternative route, or a single feature per segment per alternative route; (2) travel distance or time matrices based on the 'Distance Matrix' API; (3) geocoded locations based on the 'Geocode' API, returned as 'sf' objects, either points or bounds.
+Description: Interface to the 'Google Maps' APIs: (1) routing directions based on the 'Directions' API, returned as 'sf' objects, either as single feature per alternative route, or a single feature per segment per alternative route; (2) travel distance or time matrices based on the 'Distance Matrix' API; (3) geocoded locations based on the 'Geocode' API, returned as 'sf' objects, either points or bounds; (4) map images using the 'Maps Static' API, returned as 'stars' rasters.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
-    magrittr (>= 1.5),
-    xml2 (>= 1.1.1),
-    sf (>= 0.5-3),
-    bitops (>= 1.0-6),
-    plyr (>= 1.8.4)
-RoxygenNote: 6.1.1
+    magrittr,
+    xml2,
+    sf,
+    bitops,
+    stars,
+    RgoogleMaps
+RoxygenNote: 7.1.0
 Suggests: 
     knitr,
     rmarkdown,
-    leaflet
+    leaflet,
+    ggplot2
 VignetteBuilder: knitr
 URL: https://github.com/michaeldorman/mapsapi/
 BugReports: https://github.com/michaeldorman/mapsapi/issues/

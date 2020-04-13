@@ -4,7 +4,9 @@
 \name{response_geocode}
 \alias{response_geocode}
 \title{Sample response from Google Maps Geocode API}
-\format{A \code{character} vector of length one}
+\format{
+A \code{character} vector of length one
+}
 \usage{
 response_geocode
 }

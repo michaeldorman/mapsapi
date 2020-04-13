@@ -18,7 +18,7 @@
 #' @param alternatives Whether to return more than one alternative (\code{logical})
 #' @param avoid \code{NULL} (default) or one of: \code{"tolls"}, \code{"highways"}, \code{"ferries"} or \code{"indoor"}
 #' @param region The region code, specified as a ccTLD ("top-level domain") two-character value (e.g. \code{"es"} for Spain) (optional)
-#' @param key Google APIs key (optional)
+#' @param key Google APIs key
 #' @param quiet Logical; suppress printing URL for Google Maps API call (e.g. to hide API key)
 #' @return XML document with Google Maps Directions API response
 #' @note \itemize{
@@ -67,7 +67,7 @@ mp_directions = function(
   alternatives = FALSE,
   avoid = NULL,
   region = NULL,
-  key = NULL,
+  key,
   quiet = FALSE
   ) {
 

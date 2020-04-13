@@ -29,7 +29,7 @@
 
 ## mapsapi 0.3.9 (2019-01-19)
 
-* Support for "waypoints" parameter in 'mp_directions' and 'ms_get_segments'
+* Support for 'waypoints' parameter in 'mp_directions' and 'ms_get_segments'
 * 'mp_get_routes' now returns empty LINESTRING when 'doc' contains no route alternatives ('ZERO_RESULTS')
 * Added 'quiet' parameter to 'mp_directions' and 'mp_matrix' to hide API from text key when necessary
 
@@ -42,12 +42,12 @@
 
 * 'mp_get_points' now returns empty POINT when 'doc' contains geocode results ('ZERO_RESULTS')
 
-## mapsapi 0.4.2
+## mapsapi 0.4.2 (2019-09-07)
 
 * Added 'postcode' parameter in 'mp_geocode'
 
-## To add
+## mapsapi 0.4.5
 
-* Get static map images (?)
-
+* Added 'mp_map' function
+* Removed 'plyr' dependency
 

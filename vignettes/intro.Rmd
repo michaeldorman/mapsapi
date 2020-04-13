@@ -2,7 +2,14 @@
 title: "Introduction to package `mapsapi`"
 author: "Michael Dorman"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 3
+    theme: united
 vignette: >
   %\VignetteIndexEntry{Introduction to package `mapsapi`}
   %\VignetteEngine{knitr::rmarkdown}
@@ -23,13 +30,14 @@ div.svg-container {
 
 ## Introduction
 
-The `mapsapi` package provides an interface to the Google Maps APIs, currently three of them - 
+The `mapsapi` package provides an interface to the Google Maps APIs, currently four of them:
 
 * <a href="https://developers.google.com/maps/documentation/directions/" target="_blank">Google Maps Direction API</a>
 * <a href="https://developers.google.com/maps/documentation/distance-matrix/" target="_blank">Google Maps Distance Matrix API</a>
 * <a href="https://developers.google.com/maps/documentation/geocoding/" target="_blank">Google Maps Geocode API</a>
+* <a href="https://developers.google.com/maps/documentation/maps-static/" target="_blank">Maps Static API</a>
 
-Functions `mp_directions`, `mp_matrix` and `mp_geocode` are used to access the APIs. They return an `xml_document` object (package `xml2`) with the response contents.  
+Functions `mp_directions`, `mp_matrix` and `mp_geocode` are used to access the Directions, Matrix and Geocode APIs, respectively. They return an `xml_document` object (package `xml2`) with the response contents.  
 
 * Given a *directions* response, functions `mp_get_routes` and `mp_get_segments` can be used to process the response document into a spatial layer. Function `mp_get_routes` gives each alternative as a separate line, while function `mp_get_segments` gives each segment (that is, a portion of the route associated with specific driving instructions) as a separate line. 
 
@@ -37,59 +45,74 @@ Functions `mp_directions`, `mp_matrix` and `mp_geocode` are used to access the A
 
 * Given a *geocode* response, functions `mp_get_points` and `mp_get_bounds` can be used to obtain geocoded locations as a point or polygon (bounds) layer. 
 
+The fourth function `mp_map` is used to access the Maps Static API. It returns a `stars` raster RGB image, which can be used as background in maps.
+
 ## Installation
 
-The CRAN version can be installed with -
+The CRAN version can be installed with:
 
 ```{r, eval=FALSE}
 install.packages("mapsapi")
 ```
 
-The development version can be installed using `devtools` -
+The development version can be installed using `devtools`:
 
 ```{r, eval=FALSE}
 install.packages("devtools")
 devtools::install_github("michaeldorman/mapsapi")
 ```
 
-And loaded with `library` - 
+Once installed, the package can be loaded with `library`:
 
 ```{r}
 library(mapsapi)
 ```
 
+```{r, include=FALSE}
+key = readLines("~/key")
+```
+
+A Google Maps APIs key is required to use the package:
+
+```{r, eval=FALSE}
+key = "AIz....."
+```
+
+
 ## Directions
 
 The following expression queries the Directions API for driving directions from Tel-Aviv and Haifa. Note that locations can be specified as a coordinate pair, a textual address or an `sf` spatial object. 
 
-```{r, eval=FALSE}
+```{r}
 doc = mp_directions(
   origin = c(34.81127, 31.89277),
   destination = "Haifa",
-  alternatives = TRUE
+  alternatives = TRUE,
+  key = key,
+  quiet = TRUE
 )
 ```
 
-Or using the sample response data included in the packages -
+Or using the sample response data included in the packages:
 
-```{r}
+```{r, eval=FALSE}
 library(xml2)
 doc = as_xml_document(response_directions_driving)
 ```
 
-Given the response object, we can use `mp_get_routes` to create a spatial layer of route lines - 
+Given the response object, we can use `mp_get_routes` to create a spatial layer of route lines:
 
 ```{r}
 r = mp_get_routes(doc)
 ```
 
-Here is the resulting object - 
+Here is the resulting object:
 
 ```{r}
 r
 ```
 
-And a visualization using `leaflet` - 
+And a visualization using `leaflet`:
 
 ```{r}
 library(leaflet)
@@ -99,19 +122,19 @@ leaflet() %>%
   addPolylines(data = r, opacity = 1, weight = 7, color = ~pal(alternative_id))
 ```
 
-Separate segments can be extracted from the same response using `mp_get_segments` - 
+Separate segments can be extracted from the same response using `mp_get_segments`:
 
 ```{r}
 seg = mp_get_segments(doc)
 ```
 
-Here are the first six features of the resulting object - 
+Here are the first six features of the resulting object:
 
 ```{r}
 head(seg)
 ```
 
-And a visualization - 
+And a visualization:
 
 ```{r}
 pal = colorFactor(
@@ -131,25 +154,27 @@ The following expression queries the Distance Matrix API to obtain a matrix of d
 locations = c("Tel-Aviv", "Jerusalem", "Beer-Sheva")
 ```
 
-```{r, eval = FALSE}
+```{r}
 doc = mp_matrix(
   origins = locations,
-  destinations = locations
+  destinations = locations,
+  key = key,
+  quiet = TRUE
 )
 ```
 
-Or using the sample response data included in the packages -
+Or using the sample response data included in the packages:
 
-```{r}
+```{r, eval=FALSE}
 doc = as_xml_document(response_matrix)
 ```
 
 The `mp_get_matrix` function can then be used to process the XML reposne into a `matrix`. Possible values of the matrix include -
 
-* `distance_m` - Distance, in meters
-* `distance_text` - Distance, textual description
-* `duration_s` - Duration, in seconds
-* `duration_text` - Duration, textual description
+* `distance_m`---Distance, in meters
+* `distance_text`---Distance, textual description
+* `duration_s`---Duration, in seconds
+* `duration_text`---Duration, textual description
 
 ```{r}
 m = mp_get_matrix(doc, value = "distance_m")
@@ -162,25 +187,28 @@ m
 
 The following expression queries the Directions API for geocoding a single address.
 
-```{r, eval=FALSE}
-doc = mp_geocode(addresses = "Tel-Aviv")
+```{r}
+doc = mp_geocode(
+  addresses = "Tel-Aviv",
+  key = key
+)
 ```
 
-Or using the sample response data included in the packages -
+Or using the sample response data included in the packages:
 
-```{r}
+```{r, eval=FALSE}
 library(xml2)
 doc = list("Tel-Aviv" = as_xml_document(response_geocode))
 ```
 
-Given the response object, we can use `mp_get_points` to create a spatial layer of geocoded point locations - 
+Given the response object, we can use `mp_get_points` to create a spatial layer of geocoded point locations:
 
 ```{r}
 pnt = mp_get_points(doc)
 pnt
 ```
 
-Here is a visualization using `leaflet` - 
+Here is a visualization using `leaflet`:
 
 ```{r}
 leaflet() %>% 
@@ -188,14 +216,14 @@ leaflet() %>%
   addCircleMarkers(data = pnt)
 ```
 
-Or the bounds - 
+Or the bounds:
 
 ```{r}
 bounds = mp_get_bounds(doc)
 bounds
 ```
 
-And a visualization using `leaflet` - 
+And a visualization using `leaflet`:
 
 ```{r}
 leaflet() %>% 
@@ -203,4 +231,30 @@ leaflet() %>%
   addPolygons(data = bounds)
 ```
 
+## Static maps
 
+The `mp_map` function can be used to access the Maps Static API to download an RGB image with a map.
+
+Here is an example:
+
+```{r}
+r = mp_map("31.253205,34.791914", 14, key = key, quiet = TRUE)
+```
+
+The resulting `stars` raster can be plotted with `plot`:
+
+```{r}
+library(stars)
+plot(r)
+```
+
+or `ggplot2`:
+
+```{r}
+library(ggplot2)
+cols = attr(r[[1]], "colors")
+ggplot() +
+  geom_stars(data = r, aes(x = x, y = y, fill = color)) +
+  scale_fill_manual(values = cols, guide = FALSE) +
+  coord_sf()
+```

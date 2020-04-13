@@ -4,10 +4,19 @@
 \alias{mp_directions}
 \title{Get directions from the Google Maps Directions API}
 \usage{
-mp_directions(origin, waypoints = NULL, destination,
+mp_directions(
+  origin,
+  waypoints = NULL,
+  destination,
   mode = c("driving", "transit", "walking", "bicycling"),
-  arrival_time = NULL, departure_time = NULL, alternatives = FALSE,
-  avoid = NULL, region = NULL, key = NULL, quiet = FALSE)
+  arrival_time = NULL,
+  departure_time = NULL,
+  alternatives = FALSE,
+  avoid = NULL,
+  region = NULL,
+  key,
+  quiet = FALSE
+)
 }
 \arguments{
 \item{origin}{Origin, as \itemize{
@@ -38,7 +47,7 @@ mp_directions(origin, waypoints = NULL, destination,
 
 \item{region}{The region code, specified as a ccTLD ("top-level domain") two-character value (e.g. \code{"es"} for Spain) (optional)}
 
-\item{key}{Google APIs key (optional)}
+\item{key}{Google APIs key}
 
 \item{quiet}{Logical; suppress printing URL for Google Maps API call (e.g. to hide API key)}
 }

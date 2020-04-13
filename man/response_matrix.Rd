@@ -4,7 +4,9 @@
 \name{response_matrix}
 \alias{response_matrix}
 \title{Sample response from Google Maps Distance Matrix API}
-\format{A \code{character} vector of length one}
+\format{
+A \code{character} vector of length one
+}
 \usage{
 response_matrix
 }
