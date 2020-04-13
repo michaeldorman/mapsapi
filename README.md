@@ -6,9 +6,9 @@
 
 # mapsapi
 
-`mapsapi` provides an interface to the Google Maps APIs, currently three
-of them
-    -
+The `mapsapi` package provides an interface to the Google Maps APIs,
+currently four of
+    them:
 
   - <a href="https://developers.google.com/maps/documentation/directions/" target="_blank">Google
     Maps Direction
@@ -17,11 +17,15 @@ of them
     Maps Distance Matrix
     API</a>
   - <a href="https://developers.google.com/maps/documentation/geocoding/" target="_blank">Google
-    Maps Geocode API</a>
+    Maps Geocode
+    API</a>
+  - <a href="https://developers.google.com/maps/documentation/maps-static/" target="_blank">Maps
+    Static API</a>
 
 Functions `mp_directions`, `mp_matrix` and `mp_geocode` are used to
-access the APIs. They return an `xml_document` object (package `xml2`)
-with the response contents.
+access the Directions, Matrix and Geocode APIs, respectively. They
+return an `xml_document` object (package `xml2`) with the response
+contents.
 
   - Given a *directions* response, functions `mp_get_routes` and
     `mp_get_segments` can be used to process the response document into
@@ -37,19 +41,37 @@ with the response contents.
     `mp_get_bounds` can be used to obtain geocoded locations as a point
     or polygon (bounds) layer.
 
+The fourth function `mp_map` is used to access the Maps Static API. It
+returns a `stars` raster RGB image, which can be used as background in
+maps.
+
 ## Installation
 
-You can install `mapsapi` from CRAN with -
+The CRAN version can be installed with:
 
 ``` r
 install.packages("mapsapi")
 ```
 
-Or from GitHub with -
+The development version can be installed using `devtools`:
 
 ``` r
-# install.packages("devtools")
+install.packages("devtools")
 devtools::install_github("michaeldorman/mapsapi")
+```
+
+Once installed, the package can be loaded with `library`:
+
+``` r
+library(mapsapi)
+```
+
+**Note: due to [new Google Maps API
+policy](https://developers.google.com/maps/billing/important-updates),
+starting from June 2018 the functions require an API key.**
+
+``` r
+key = "AIz....."
 ```
 
 ## Example
@@ -57,16 +79,7 @@ devtools::install_github("michaeldorman/mapsapi")
 The following code section obtains (and plots) the driving directions
 from New-York to Los Angeles.
 
-**Note: due to [new Google Maps API
-policy](https://developers.google.com/maps/billing/important-updates),
-starting from June 2018 the functions require an API key.**
-
 ``` r
-library(mapsapi)
-
-# Google API key
-key = readLines("~/key")
-
 # Get routes (XML document)
 doc = mp_directions(
   origin = "New-York",
@@ -82,8 +95,7 @@ r = mp_get_routes(doc)
 # Plot
 library(maps)
 library(sf)
-#> Linking to GEOS 3.6.2, GDAL 2.2.3, PROJ 4.9.3
-
+#> Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 7.0.0
 map("state", fill = FALSE, col = "grey")
 plot(st_geometry(r), col = c("red", "green", "blue"), add = TRUE)
 ```

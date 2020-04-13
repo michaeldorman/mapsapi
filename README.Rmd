@@ -17,13 +17,14 @@ knitr::opts_chunk$set(
 
 # mapsapi
 
-`mapsapi` provides an interface to the Google Maps APIs, currently three of them - 
+The `mapsapi` package provides an interface to the Google Maps APIs, currently four of them:
 
 * <a href="https://developers.google.com/maps/documentation/directions/" target="_blank">Google Maps Direction API</a>
 * <a href="https://developers.google.com/maps/documentation/distance-matrix/" target="_blank">Google Maps Distance Matrix API</a>
 * <a href="https://developers.google.com/maps/documentation/geocoding/" target="_blank">Google Maps Geocode API</a>
+* <a href="https://developers.google.com/maps/documentation/maps-static/" target="_blank">Maps Static API</a>
 
-Functions `mp_directions`, `mp_matrix` and `mp_geocode` are used to access the APIs. They return an `xml_document` object (package `xml2`) with the response contents.  
+Functions `mp_directions`, `mp_matrix` and `mp_geocode` are used to access the Directions, Matrix and Geocode APIs, respectively. They return an `xml_document` object (package `xml2`) with the response contents.  
 
 * Given a *directions* response, functions `mp_get_routes` and `mp_get_segments` can be used to process the response document into a spatial layer. Function `mp_get_routes` gives each alternative as a separate line, while function `mp_get_segments` gives each segment (that is, a portion of the route associated with specific driving instructions) as a separate line. 
 
@@ -31,33 +32,44 @@ Functions `mp_directions`, `mp_matrix` and `mp_geocode` are used to access the A
 
 * Given a *geocode* response, functions `mp_get_points` and `mp_get_bounds` can be used to obtain geocoded locations as a point or polygon (bounds) layer. 
 
+The fourth function `mp_map` is used to access the Maps Static API. It returns a `stars` raster RGB image, which can be used as background in maps.
+
 ## Installation
 
-You can install `mapsapi` from CRAN with - 
+The CRAN version can be installed with:
 
-```{r cran-installation, eval = FALSE}
+```{r, eval=FALSE}
 install.packages("mapsapi")
 ```
 
-Or from GitHub with -
+The development version can be installed using `devtools`:
 
-```{r gh-installation, eval = FALSE}
-# install.packages("devtools")
+```{r, eval=FALSE}
+install.packages("devtools")
 devtools::install_github("michaeldorman/mapsapi")
+```
+
+Once installed, the package can be loaded with `library`:
+
+```{r}
+library(mapsapi)
+```
+
+```{r, include=FALSE}
+key = readLines("~/key")
+```
+
+**Note: due to [new Google Maps API policy](https://developers.google.com/maps/billing/important-updates), starting from June 2018 the functions require an API key.**
+
+```{r, eval=FALSE}
+key = "AIz....."
 ```
 
 ## Example
 
 The following code section obtains (and plots) the driving directions from New-York to Los Angeles. 
 
-**Note: due to [new Google Maps API policy](https://developers.google.com/maps/billing/important-updates), starting from June 2018 the functions require an API key.**
-
 ```{r example}
-library(mapsapi)
-
-# Google API key
-key = readLines("~/key")
-
 # Get routes (XML document)
 doc = mp_directions(
   origin = "New-York",
@@ -73,7 +85,6 @@ r = mp_get_routes(doc)
 # Plot
 library(maps)
 library(sf)
-
 map("state", fill = FALSE, col = "grey")
 plot(st_geometry(r), col = c("red", "green", "blue"), add = TRUE)
 ```

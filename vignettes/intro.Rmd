@@ -55,11 +55,11 @@ The CRAN version can be installed with:
 install.packages("mapsapi")
 ```
 
-The development version can be installed using `devtools`:
+The development version can be installed using `remotes`:
 
 ```{r, eval=FALSE}
-install.packages("devtools")
-devtools::install_github("michaeldorman/mapsapi")
+install.packages("remotes")
+remotes::install_github("michaeldorman/mapsapi")
 ```
 
 Once installed, the package can be loaded with `library`:
@@ -93,13 +93,6 @@ doc = mp_directions(
 )
 ```
 
-Or using the sample response data included in the packages:
-
-```{r, eval=FALSE}
-library(xml2)
-doc = as_xml_document(response_directions_driving)
-```
-
 Given the response object, we can use `mp_get_routes` to create a spatial layer of route lines:
 
 ```{r}
@@ -112,7 +105,7 @@ Here is the resulting object:
 r
 ```
 
-And a visualization using `leaflet`:
+and a visualization using `leaflet`:
 
 ```{r}
 library(leaflet)
@@ -134,7 +127,7 @@ Here are the first six features of the resulting object:
 head(seg)
 ```
 
-And a visualization:
+and a visualization:
 
 ```{r}
 pal = colorFactor(
@@ -163,13 +156,7 @@ doc = mp_matrix(
 )
 ```
 
-Or using the sample response data included in the packages:
-
-```{r, eval=FALSE}
-doc = as_xml_document(response_matrix)
-```
-
-The `mp_get_matrix` function can then be used to process the XML reposne into a `matrix`. Possible values of the matrix include -
+The `mp_get_matrix` function can then be used to process the XML reposne into a `matrix`. Possible values of the matrix include:
 
 * `distance_m`---Distance, in meters
 * `distance_text`---Distance, textual description
