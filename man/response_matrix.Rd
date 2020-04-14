@@ -5,7 +5,7 @@
 \alias{response_matrix}
 \title{Sample response from Google Maps Distance Matrix API}
 \format{
-A \code{character} vector of length one
+A \code{list} obtained using \code{as_list} on XML response
 }
 \usage{
 response_matrix

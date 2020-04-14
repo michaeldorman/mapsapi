@@ -2,7 +2,7 @@
 #'
 #' XML documents with \strong{driving} directions from Tel-Aviv to Haifa
 #'
-#' @format A \code{character} vector of length one
+#' @format A \code{list} obtained using \code{as_list} on XML response
 #' @note See \code{\link{response_directions_transit}} for Directions API response with \strong{transit} directions
 #' @import magrittr
 #' @import sf
@@ -18,7 +18,7 @@
 #'
 #' XML documents with \strong{transit} directions from New-York to Boston
 #'
-#' @format A \code{character} vector of length one
+#' @format A \code{list} obtained using \code{as_list} on XML response
 #' @note See \code{\link{response_directions_driving}} for Directions API response with \strong{driving} directions
 #' @examples
 #' library(xml2)
@@ -30,7 +30,7 @@
 #'
 #' An XML document with a distance matrix for driving between three locations: Tel-Aviv, Jerusalem and Beer-Sheva
 #'
-#' @format A \code{character} vector of length one
+#' @format A \code{list} obtained using \code{as_list} on XML response
 #' @examples
 #' library(xml2)
 #' doc = as_xml_document(response_matrix)
@@ -41,10 +41,20 @@
 #'
 #' An XML document with a geocoded location for the address "Tel-Aviv"
 #'
-#' @format A \code{character} vector of length one
+#' @format A \code{list} obtained using \code{as_list} on XML response
 #' @examples
 #' library(xml2)
-#' doc = as_xml_document(response_geocode)
+#' doc = list("Tel-Aviv" = as_xml_document(response_geocode))
 
 "response_geocode"
 
+#' Sample response from Maps Static API (as 'stars' raster)
+#'
+#' A \code{stars} raster with a static image of Beer-Sheva from the Maps Static API
+#'
+#' @format A \code{stars} raster with two dimensions \code{x} and \code{y} and a color table
+#' @examples
+#' library(stars)
+#' plot(response_map)
+
+"response_map"

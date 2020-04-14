@@ -194,7 +194,7 @@ mp_map = function(
 
 #' Plot static Google map
 #'
-#' Plot method for static maps obtained from \code{\link{mp_map}}.
+#' Plot method for static maps using function \code{\link{mp_map}}.
 #'
 #' @param x Map object of class \code{stars} and \code{mapsapi_map} obtained from function \code{\link{mp_map}}
 #' @param ... Further arguments passed to \code{plot.stars}

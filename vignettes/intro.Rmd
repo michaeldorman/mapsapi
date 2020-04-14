@@ -68,10 +68,6 @@ Once installed, the package can be loaded with `library`:
 library(mapsapi)
 ```
 
-```{r, include=FALSE}
-key = readLines("~/key")
-```
-
 A Google Maps APIs key is required to use the package:
 
 ```{r, eval=FALSE}
@@ -81,9 +77,9 @@ key = "AIz....."
 
 ## Directions
 
-The following expression queries the Directions API for driving directions from Tel-Aviv and Haifa. Note that locations can be specified as a coordinate pair, a textual address or an `sf` spatial object. 
+The following expression queries the Directions API for driving directions from Tel-Aviv and Haifa. Note that locations can be specified as a coordinate pair, a textual address or an `sf` spatial object. For example:
 
-```{r}
+```{r, eval=FALSE}
 doc = mp_directions(
   origin = c(34.81127, 31.89277),
   destination = "Haifa",
@@ -91,6 +87,13 @@ doc = mp_directions(
   key = key,
   quiet = TRUE
 )
+```
+
+Alternatively, we can use the sample response data included in the packages:
+
+```{r}
+library(xml2)
+doc = as_xml_document(response_directions_driving)
 ```
 
 Given the response object, we can use `mp_get_routes` to create a spatial layer of route lines:
@@ -147,13 +150,19 @@ The following expression queries the Distance Matrix API to obtain a matrix of d
 locations = c("Tel-Aviv", "Jerusalem", "Beer-Sheva")
 ```
 
-```{r}
+```{r, eval=FALSE}
 doc = mp_matrix(
   origins = locations,
   destinations = locations,
   key = key,
   quiet = TRUE
 )
+```
+
+Alternatively, we can use the sample response data included in the packages:
+
+```{r}
+doc = as_xml_document(response_matrix)
 ```
 
 The `mp_get_matrix` function can then be used to process the XML reposne into a `matrix`. Possible values of the matrix include:
@@ -172,19 +181,18 @@ m
 
 ## Geocode
 
-The following expression queries the Directions API for geocoding a single address.
+The following expression queries the Directions API for geocoding a single address:
 
-```{r}
+```{r, eval=FALSE}
 doc = mp_geocode(
   addresses = "Tel-Aviv",
   key = key
 )
 ```
 
-Or using the sample response data included in the packages:
+Alternatively, we can use the sample response data included with the package:
 
-```{r, eval=FALSE}
-library(xml2)
+```{r}
 doc = list("Tel-Aviv" = as_xml_document(response_geocode))
 ```
 
@@ -224,18 +232,24 @@ The `mp_map` function can be used to access the Maps Static API to download an R
 
 Here is an example:
 
-```{r}
-r = mp_map("31.253205,34.791914", 14, key = key, quiet = TRUE)
+```{r, eval=FALSE}
+r = mp_map(center = "31.253205,34.791914", zoom = 14, key = key, quiet = TRUE)
 ```
 
-The resulting `stars` raster can be plotted with `plot`:
+Alternatively, we can use the sample response data included with the package:
+
+```{r}
+r = response_map
+```
+
+The result is a `stars` raster, which can be plotted with `plot`:
 
 ```{r}
 library(stars)
 plot(r)
 ```
 
-or `ggplot2`:
+or with `ggplot2`:
 
 ```{r}
 library(ggplot2)

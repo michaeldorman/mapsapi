@@ -55,10 +55,6 @@ Once installed, the package can be loaded with `library`:
 library(mapsapi)
 ```
 
-```{r, include=FALSE}
-key = readLines("~/key")
-```
-
 **Note: due to [new Google Maps API policy](https://developers.google.com/maps/billing/important-updates), starting from June 2018 the functions require an API key.**
 
 ```{r, eval=FALSE}
@@ -68,6 +64,10 @@ key = "AIz....."
 ## Example
 
 The following code section obtains (and plots) the driving directions from New-York to Los Angeles. 
+
+```{r, include=FALSE}
+key = readLines("~/key")
+```
 
 ```{r example}
 # Get routes (XML document)

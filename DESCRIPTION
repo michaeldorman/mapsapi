@@ -11,6 +11,8 @@ Description: Interface to the 'Google Maps' APIs: (1) routing directions based o
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Depends: 
+    R (>= 2.10)
 Imports:
     magrittr,
     xml2,

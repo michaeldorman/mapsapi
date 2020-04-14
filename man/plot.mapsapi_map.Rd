@@ -12,5 +12,5 @@
 \item{...}{Further arguments passed to \code{plot.stars}}
 }
 \description{
-Plot method for static maps obtained from \code{\link{mp_map}}.
+Plot method for static maps using function \code{\link{mp_map}}.
 }
