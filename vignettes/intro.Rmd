@@ -165,7 +165,7 @@ Alternatively, we can use the sample response data included in the packages:
 doc = as_xml_document(response_matrix)
 ```
 
-The `mp_get_matrix` function can then be used to process the XML reposne into a `matrix`. Possible values of the matrix include:
+The `mp_get_matrix` function can then be used to process the XML response into a `matrix`. Possible values of the matrix include:
 
 * `distance_m`---Distance, in meters
 * `distance_text`---Distance, textual description

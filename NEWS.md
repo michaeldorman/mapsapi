@@ -49,5 +49,4 @@
 ## mapsapi 0.4.5
 
 * Added 'mp_map' function
-* Removed 'plyr' dependency
 

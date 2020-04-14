@@ -12,7 +12,7 @@ mp_get_routes(doc)
 \value{
 Line layer (class \code{sf}) representing routes.
 
-When document contains no routes ("ZERO_RESULTS" status), the funtion returns an empty line layer with \code{NA} in all fields.
+When document contains no routes ("ZERO_RESULTS" status), the function returns an empty line layer with \code{NA} in all fields.
 }
 \description{
 Extract *routes* from Google Maps Directions API response

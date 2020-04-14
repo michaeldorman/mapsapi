@@ -1,7 +1,7 @@
 #' Extract distance or duration *matrix* from a Google Maps Distance Matrix API response
 #' @param doc XML document with Google Maps Distance Matrix API response
 #' @param value Value to extract, one of: \code{"distance_m"} (default), \code{"distance_text"}, \code{"duration_s"}, \code{"duration_text"}, \code{"duration_in_traffic_s"}, \code{"duration_in_traffic_text"}
-#' @return A \code{matrix}, where rows represent origins and columns represent destinations. Matrix values are according to selected \code{value}, or \code{NA} if the ARI returned zero results
+#' @return A \code{matrix}, where rows represent origins and columns represent destinations. Matrix values are according to selected \code{value}, or \code{NA} if the API returned zero results
 #' @note The \code{"duration_in_traffic_s"} and \code{"duration_in_traffic_text"} options are only applicable when the API response contains these fields, i.e., when using \code{\link{mp_matrix}} with \code{mode="driving"}, with \code{departure_time} specified, and API key \code{key} provided
 #' @export
 #' @examples

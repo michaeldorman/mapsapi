@@ -12,7 +12,7 @@ mp_get_matrix(doc, value = "distance_m")
 \item{value}{Value to extract, one of: \code{"distance_m"} (default), \code{"distance_text"}, \code{"duration_s"}, \code{"duration_text"}, \code{"duration_in_traffic_s"}, \code{"duration_in_traffic_text"}}
 }
 \value{
-A \code{matrix}, where rows represent origins and columns represent destinations. Matrix values are according to selected \code{value}, or \code{NA} if the ARI returned zero results
+A \code{matrix}, where rows represent origins and columns represent destinations. Matrix values are according to selected \code{value}, or \code{NA} if the API returned zero results
 }
 \description{
 Extract distance or duration *matrix* from a Google Maps Distance Matrix API response
