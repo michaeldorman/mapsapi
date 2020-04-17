@@ -10,8 +10,9 @@ mp_matrix(
   mode = c("driving", "transit", "walking", "bicycling"),
   arrival_time = NULL,
   departure_time = NULL,
-  avoid = NULL,
+  avoid = c(NA, "tolls", "highways", "ferries", "indoor"),
   region = NULL,
+  traffic_model = c("best_guess", "pessimistic", "optimistic"),
   key,
   quiet = FALSE
 )
@@ -32,9 +33,11 @@ mp_matrix(
 
 \item{departure_time}{The desired time of departure, as \code{POSIXct}}
 
-\item{avoid}{\code{NULL} (default) or one of: \code{"tolls"}, \code{"highways"}, \code{"ferries"} or \code{"indoor"}}
+\item{avoid}{\code{NA} (default) or one of: \code{"tolls"}, \code{"highways"}, \code{"ferries"} or \code{"indoor"}}
 
 \item{region}{The region code, specified as a ccTLD ("top-level domain") two-character value (e.g. \code{"es"} for Spain) (optional)}
+
+\item{traffic_model}{The traffic model, one of: \code{"best_guess"} (the default), \code{"pessimistic"}, \code{"optimistic"}. The \code{traffic_model} parameter is only taken into account when \code{departure_time} is specified!}
 
 \item{key}{Google APIs key}
 
@@ -55,11 +58,14 @@ library(xml2)
 doc = as_xml_document(response_matrix)
 
 \dontrun{
+# Text file with API key
+key = readLines("~/key")
 
 # Using 'data.frame' input
 doc = mp_matrix(
-  origins = rbind(c(34.81127, 31.89277), c(35.212085, 31.769976)),
-  destinations = c(34.781107, 32.085003)
+  origins = rbind(c(34.811, 31.892), c(35.212, 31.769)),
+  destinations = c(34.781, 32.085),
+  key = key
 )
 
 # Using 'character' input

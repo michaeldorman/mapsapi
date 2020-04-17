@@ -15,9 +15,10 @@
 #' @param mode Travel mode, one of: \code{"driving"} (default), \code{"transit"}, \code{"walking"}, \code{"bicycling"}
 #' @param arrival_time The desired time of arrival for transit directions, as \code{POSIXct}
 #' @param departure_time The desired time of departure, as \code{POSIXct}
-#' @param alternatives Whether to return more than one alternative (\code{logical})
-#' @param avoid \code{NULL} (default) or one of: \code{"tolls"}, \code{"highways"}, \code{"ferries"} or \code{"indoor"}
+#' @param alternatives Whether to return more than one alternative (\code{logical}, default is \code{FALSE})
+#' @param avoid \code{NA} (default, means avoid nothing) or one of: \code{"tolls"}, \code{"highways"}, \code{"ferries"} or \code{"indoor"}
 #' @param region The region code, specified as a ccTLD ("top-level domain") two-character value (e.g. \code{"es"} for Spain) (optional)
+#' @param traffic_model The traffic model, one of: \code{"best_guess"} (the default), \code{"pessimistic"}, \code{"optimistic"}. The \code{traffic_model} parameter is only taken into account when \code{departure_time} is specified!
 #' @param key Google APIs key
 #' @param quiet Logical; suppress printing URL for Google Maps API call (e.g. to hide API key)
 #' @return XML document with Google Maps Directions API response
@@ -55,6 +56,32 @@
 #'   alternatives = TRUE,
 #'   key = key
 #' )
+#'
+#' # Comparing traffic models
+#' doc = mp_directions(
+#'   origin = "Beer-Sheva",
+#'   destination = "Tel Aviv",
+#'   departure_time = Sys.time() + as.difftime(1, units = "hours"),
+#'   traffic_model = "best_guess",
+#'   key = key
+#' )
+#' mp_get_routes(doc)$duration_in_traffic_text
+#' doc = mp_directions(
+#'   origin = "Beer-Sheva",
+#'   destination = "Tel Aviv",
+#'   departure_time = Sys.time() + as.difftime(1, units = "hours"),
+#'   traffic_model = "optimistic",
+#'   key = key
+#' )
+#' mp_get_routes(doc)$duration_in_traffic_text
+#' doc = mp_directions(
+#'   origin = "Beer-Sheva",
+#'   destination = "Tel Aviv",
+#'   departure_time = Sys.time() + as.difftime(1, units = "hours"),
+#'   traffic_model = "pessimistic",
+#'   key = key
+#' )
+#' mp_get_routes(doc)$duration_in_traffic_text
 #' }
 
 mp_directions = function(
@@ -65,15 +92,17 @@ mp_directions = function(
   arrival_time = NULL,
   departure_time = NULL,
   alternatives = FALSE,
-  avoid = NULL,
+  avoid = c(NA, "tolls", "highways", "ferries", "indoor"),
   region = NULL,
+  traffic_model = c("best_guess", "pessimistic", "optimistic"),
   key,
   quiet = FALSE
   ) {
 
   # Checks
-  .check_directions_mode(mode[1])
-  .check_directions_avoid(avoid)
+  mode = match.arg(mode)
+  avoid = match.arg(avoid)
+  traffic_model = match.arg(traffic_model)
   .check_posix_time(arrival_time)
   .check_posix_time(departure_time)
 
@@ -91,7 +120,8 @@ mp_directions = function(
     "&mode=",
     mode[1],
     "&alternatives=",
-    tolower(alternatives))
+    tolower(alternatives)
+  )
 
   # Add 'waypoints'
   if(!is.null(waypoints)) {
@@ -108,7 +138,7 @@ mp_directions = function(
     url = paste0(
       url,
       "&arrival_time=",
-      arrival_time %>% as.numeric %>% round
+      round(as.numeric(arrival_time))
     )
   }
 
@@ -117,12 +147,21 @@ mp_directions = function(
     url = paste0(
       url,
       "&departure_time=",
-      departure_time %>% as.numeric %>% round
+      round(as.numeric(departure_time))
+    )
+  }
+
+  # Add 'traffic_model'
+  if(!is.null(departure_time)) {
+    url = paste0(
+      url,
+      "&traffic_model=",
+      traffic_model
     )
   }
 
   # Add 'avoid'
-  if(!is.null(avoid)) {
+  if(!is.na(avoid)) {
     url = paste0(
       url,
       "&avoid=",

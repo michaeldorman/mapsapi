@@ -46,7 +46,16 @@
 
 * Added 'postcode' parameter in 'mp_geocode'
 
-## mapsapi 0.4.5
+## mapsapi 0.4.5 (2020-04-14)
 
 * Added 'mp_map' function
+* Replace 'NULL' with 'NA' in parameters
+
+## mapsapi 0.4.6
+
+* Added 'traffic_model' parameter in 'mp_directions' and 'mp_matrix'
+
+## To do
+
+* Allow selecting >1 'avoid' options in 'mp_directions'
 

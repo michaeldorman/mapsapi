@@ -34,21 +34,6 @@
 
 ### Directions
 
-.check_matrix_value = function(x) {
-  valid = x %in% c("distance_m", "distance_text", "duration_s", "duration_text")
-  if(!valid) stop("'value' must be one of: 'distance_m', 'distance_text', 'duration_s', 'duration_text'")
-}
-
-.check_directions_mode = function(mode) {
-  valid = mode %in% c("driving", "transit", "walking", "bicycling")
-  if(!valid) stop("'mode' must be one of: 'driving', 'transit', 'walking', 'bicycling'")
-}
-
-.check_directions_avoid = function(avoid) {
-  valid = avoid %in% c("tolls", "highways", "ferries", "indoor") || is.null(avoid)
-  if(!valid) stop("'avoid' must either 'NULL' or one of: 'tolls', 'highways', 'ferries', 'indoor'")
-}
-
 .check_posix_time = function(time) {
   valid = inherits(time, "POSIXt")  || is.null(time)
   if(!valid) stop("Times must be provided as 'POSIXct' or 'POSIXlt' objects")

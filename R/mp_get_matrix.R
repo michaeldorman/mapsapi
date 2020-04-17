@@ -1,6 +1,6 @@
 #' Extract distance or duration *matrix* from a Google Maps Distance Matrix API response
 #' @param doc XML document with Google Maps Distance Matrix API response
-#' @param value Value to extract, one of: \code{"distance_m"} (default), \code{"distance_text"}, \code{"duration_s"}, \code{"duration_text"}, \code{"duration_in_traffic_s"}, \code{"duration_in_traffic_text"}
+#' @param value Value to extract, one of: \code{"distance_m"} (the default), \code{"distance_text"}, \code{"duration_s"}, \code{"duration_text"}, \code{"duration_in_traffic_s"}, \code{"duration_in_traffic_text"}
 #' @return A \code{matrix}, where rows represent origins and columns represent destinations. Matrix values are according to selected \code{value}, or \code{NA} if the API returned zero results
 #' @note The \code{"duration_in_traffic_s"} and \code{"duration_in_traffic_text"} options are only applicable when the API response contains these fields, i.e., when using \code{\link{mp_matrix}} with \code{mode="driving"}, with \code{departure_time} specified, and API key \code{key} provided
 #' @export
@@ -14,8 +14,8 @@
 #' mp_get_matrix(doc, value = "duration_text")
 #'
 #' \dontrun{
-#'
-#' key = readLines("~/key") # Text file with API key
+#' # Text file with API key
+#' key = readLines("~/key")
 #'
 #' locations = c("Tel-Aviv", "Jerusalem", "Neve Shalom")
 #'
@@ -48,11 +48,9 @@
 #'
 #' }
 
-mp_get_matrix = function(doc, value = "distance_m")  {
+mp_get_matrix = function(doc, value = c("distance_m", "distance_text", "duration_s", "duration_text", "duration_in_traffic_s", "duration_in_traffic_text"))  {
 
-  # Check 'value'
-  if(!value %in% c("distance_m", "distance_text", "duration_s", "duration_text", "duration_in_traffic_s", "duration_in_traffic_text"))
-    stop("Value must be one of: 'distance_m', 'distance_text', 'duration_s', 'duration_text', 'duration_in_traffic_s', 'duration_in_traffic_text'")
+  value = match.arg(value)
 
   rows =
     doc %>%

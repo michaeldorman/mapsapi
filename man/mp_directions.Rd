@@ -12,8 +12,9 @@ mp_directions(
   arrival_time = NULL,
   departure_time = NULL,
   alternatives = FALSE,
-  avoid = NULL,
+  avoid = c(NA, "tolls", "highways", "ferries", "indoor"),
   region = NULL,
+  traffic_model = c("best_guess", "pessimistic", "optimistic"),
   key,
   quiet = FALSE
 )
@@ -41,11 +42,13 @@ mp_directions(
 
 \item{departure_time}{The desired time of departure, as \code{POSIXct}}
 
-\item{alternatives}{Whether to return more than one alternative (\code{logical})}
+\item{alternatives}{Whether to return more than one alternative (\code{logical}, default is \code{FALSE})}
 
-\item{avoid}{\code{NULL} (default) or one of: \code{"tolls"}, \code{"highways"}, \code{"ferries"} or \code{"indoor"}}
+\item{avoid}{\code{NA} (default, means avoid nothing) or one of: \code{"tolls"}, \code{"highways"}, \code{"ferries"} or \code{"indoor"}}
 
 \item{region}{The region code, specified as a ccTLD ("top-level domain") two-character value (e.g. \code{"es"} for Spain) (optional)}
+
+\item{traffic_model}{The traffic model, one of: \code{"best_guess"} (the default), \code{"pessimistic"}, \code{"optimistic"}. The \code{traffic_model} parameter is only taken into account when \code{departure_time} is specified!}
 
 \item{key}{Google APIs key}
 
@@ -91,6 +94,32 @@ doc = mp_directions(
   alternatives = TRUE,
   key = key
 )
+
+# Comparing traffic models
+doc = mp_directions(
+  origin = "Beer-Sheva",
+  destination = "Tel Aviv",
+  departure_time = Sys.time() + as.difftime(1, units = "hours"),
+  traffic_model = "best_guess",
+  key = key
+)
+mp_get_routes(doc)$duration_in_traffic_text
+doc = mp_directions(
+  origin = "Beer-Sheva",
+  destination = "Tel Aviv",
+  departure_time = Sys.time() + as.difftime(1, units = "hours"),
+  traffic_model = "optimistic",
+  key = key
+)
+mp_get_routes(doc)$duration_in_traffic_text
+doc = mp_directions(
+  origin = "Beer-Sheva",
+  destination = "Tel Aviv",
+  departure_time = Sys.time() + as.difftime(1, units = "hours"),
+  traffic_model = "pessimistic",
+  key = key
+)
+mp_get_routes(doc)$duration_in_traffic_text
 }
 }
 \references{

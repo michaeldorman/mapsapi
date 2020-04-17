@@ -9,8 +9,9 @@
 #' @param mode Travel mode, one of: \code{"driving"}, \code{"transit"}, \code{"walking"}, \code{"bicycling"}
 #' @param arrival_time The desired time of arrival for transit directions, as \code{POSIXct}
 #' @param departure_time The desired time of departure, as \code{POSIXct}
-#' @param avoid \code{NULL} (default) or one of: \code{"tolls"}, \code{"highways"}, \code{"ferries"} or \code{"indoor"}
+#' @param avoid \code{NA} (default) or one of: \code{"tolls"}, \code{"highways"}, \code{"ferries"} or \code{"indoor"}
 #' @param region The region code, specified as a ccTLD ("top-level domain") two-character value (e.g. \code{"es"} for Spain) (optional)
+#' @param traffic_model The traffic model, one of: \code{"best_guess"} (the default), \code{"pessimistic"}, \code{"optimistic"}. The \code{traffic_model} parameter is only taken into account when \code{departure_time} is specified!
 #' @param key Google APIs key
 #' @param quiet Logical; suppress printing URL for Google Maps API call (e.g. to hide API key)
 #' @return XML document with Google Maps Distance Matrix API response
@@ -23,11 +24,14 @@
 #' doc = as_xml_document(response_matrix)
 #'
 #' \dontrun{
+#' # Text file with API key
+#' key = readLines("~/key")
 #'
 #' # Using 'data.frame' input
 #' doc = mp_matrix(
-#'   origins = rbind(c(34.81127, 31.89277), c(35.212085, 31.769976)),
-#'   destinations = c(34.781107, 32.085003)
+#'   origins = rbind(c(34.811, 31.892), c(35.212, 31.769)),
+#'   destinations = c(34.781, 32.085),
+#'   key = key
 #' )
 #'
 #' # Using 'character' input
@@ -44,15 +48,16 @@ mp_matrix = function(
   mode = c("driving", "transit", "walking", "bicycling"),
   arrival_time = NULL,
   departure_time = NULL,
-  avoid = NULL,
+  avoid = c(NA, "tolls", "highways", "ferries", "indoor"),
   region = NULL,
+  traffic_model = c("best_guess", "pessimistic", "optimistic"),
   key,
   quiet = FALSE
   ) {
 
   # Checks
-  .check_directions_mode(mode[1])
-  .check_directions_avoid(avoid)
+  mode = match.arg(mode)
+  avoid = match.arg(avoid)
   .check_posix_time(arrival_time)
   .check_posix_time(departure_time)
 
@@ -76,7 +81,7 @@ mp_matrix = function(
     url = paste0(
       url,
       "&arrival_time=",
-      arrival_time %>% as.numeric %>% round
+      round(as.numeric(arrival_time))
     )
   }
 
@@ -85,12 +90,21 @@ mp_matrix = function(
     url = paste0(
       url,
       "&departure_time=",
-      departure_time %>% as.numeric %>% round
+      round(as.numeric(departure_time))
+    )
+  }
+
+  # Add 'traffic_model'
+  if(!is.null(departure_time)) {
+    url = paste0(
+      url,
+      "&traffic_model=",
+      traffic_model
     )
   }
 
   # Add 'avoid'
-  if(!is.null(avoid)) {
+  if(!is.na(avoid)) {
     url = paste0(
       url,
       "&avoid=",
