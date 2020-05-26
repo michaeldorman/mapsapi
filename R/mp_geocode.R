@@ -67,7 +67,8 @@ mp_geocode = function(
   region = NULL,
   postcode = NULL,
   bounds = NULL,
-  key
+  key,
+  quiet = FALSE
   ) {
 
   # Checks
@@ -162,6 +163,7 @@ mp_geocode = function(
 
       # Get response
       url = utils::URLencode(url)
+      if(!quiet) message(url)
       response[[i]] = xml2::read_xml(url)
 
       # 'status' to print
@@ -175,9 +177,11 @@ mp_geocode = function(
     # Print current progress
     address_char = nchar(addresses[i]); if(is.na(address_char)) address_char = 2
     dots = max(c(1, 40 - address_char))
-    cat(paste0(addresses[i], paste0(rep(".", dots), collapse = "")))
-    if(!is.null(status)) cat(status)
-    cat("\n")
+    if(!quiet) {
+      cat(paste0(addresses[i], paste0(rep(".", dots), collapse = "")))
+      if(!is.null(status)) cat(status)
+      cat("\n")
+    }
 
     # Wait 1 seconds to avoid rate limit (50 requests per minute)
     if(length(addresses > 1)) Sys.sleep(1)

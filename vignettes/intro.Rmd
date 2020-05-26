@@ -186,7 +186,8 @@ The following expression queries the Directions API for geocoding a single addre
 ```{r, eval=FALSE}
 doc = mp_geocode(
   addresses = "Tel-Aviv",
-  key = key
+  key = key,
+  quiet = TRUE
 )
 ```
 

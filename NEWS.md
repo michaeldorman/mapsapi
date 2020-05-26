@@ -54,8 +54,10 @@
 ## mapsapi 0.4.6
 
 * Added 'traffic_model' parameter in 'mp_directions' and 'mp_matrix'
+* Added 'quiet' parameter in 'mp_geocode'
 
 ## To do
 
+* Replace 'testthat' with 'tinytest'
 * Allow selecting >1 'avoid' options in 'mp_directions'
-
+* Static maps from other sources (?)
