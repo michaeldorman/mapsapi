@@ -58,6 +58,5 @@
 
 ## To do
 
-* Replace 'testthat' with 'tinytest'
 * Allow selecting >1 'avoid' options in 'mp_directions'
 * Static maps from other sources (?)
