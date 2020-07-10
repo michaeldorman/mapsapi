@@ -53,11 +53,11 @@ The CRAN version can be installed with:
 install.packages("mapsapi")
 ```
 
-The development version can be installed using `devtools`:
+The development version can be installed using `remotes`:
 
 ``` r
-install.packages("devtools")
-devtools::install_github("michaeldorman/mapsapi")
+install.packages("remotes")
+remotes::install_github("michaeldorman/mapsapi")
 ```
 
 Once installed, the package can be loaded with `library`:
