@@ -8,7 +8,8 @@
 #' doc = list("Tel-Aviv" = as_xml_document(response_geocode))
 #' pnt = mp_get_points(doc)
 #' \dontrun{
-#' doc = mp_geocode(addresses = c("Rehovot", "Beer-Sheva", "New-York"))
+#' key = readLines("~/key")
+#' doc = mp_geocode(addresses = c("Rehovot", "Beer-Sheva", "New-York"), key = key)
 #' pnt = mp_get_points(doc)
 #' }
 
@@ -82,7 +83,7 @@ mp_get_points = function(doc, all_results = FALSE)  {
       data.frame(
         id = i,
         status = status,
-        address = names(doc)[i],
+        address = ifelse(!is.null(names(doc)[i]), names(doc)[i], NA),
         address_google = address_google,
         location_type = location_type,
         stringsAsFactors = FALSE

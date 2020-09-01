@@ -22,7 +22,8 @@ library(xml2)
 doc = list("Tel-Aviv" = as_xml_document(response_geocode))
 pnt = mp_get_points(doc)
 \dontrun{
-doc = mp_geocode(addresses = c("Rehovot", "Beer-Sheva", "New-York"))
+key = readLines("~/key")
+doc = mp_geocode(addresses = c("Rehovot", "Beer-Sheva", "New-York"), key = key)
 pnt = mp_get_points(doc)
 }
 }

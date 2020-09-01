@@ -56,6 +56,10 @@
 * Added 'traffic_model' parameter in 'mp_directions' and 'mp_matrix'
 * Added 'quiet' parameter in 'mp_geocode'
 
+## mapsapi 0.4.7
+
+* 'mp_get_points' now also works given unnamed 'list' of documents
+
 ## To do
 
 * Allow selecting >1 'avoid' options in 'mp_directions'
