@@ -90,5 +90,5 @@ mp_get_points(result)
 }
 }
 \references{
-\url{https://developers.google.com/maps/documentation/geocoding/intro}
+\url{https://developers.google.com/maps/documentation/geocoding/overview}
 }

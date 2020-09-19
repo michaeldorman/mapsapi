@@ -58,7 +58,7 @@
 
 ## mapsapi 0.4.7
 
-* 'mp_get_points' now also works given unnamed 'list' of documents
+* 'mp_get_points' and 'mp_get_bounds' now also works given unnamed 'list' of documents
 
 ## To do
 

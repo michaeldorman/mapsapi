@@ -10,7 +10,7 @@
 #' \item Use function \code{\link{mp_get_points}} to extract \strong{locations} as \code{sf} point layer
 #' \item Use function \code{\link{mp_get_bounds}} to extract \strong{location bounds} as \code{sf} polygonal layer
 #' }
-#' @references \url{https://developers.google.com/maps/documentation/geocoding/intro}
+#' @references \url{https://developers.google.com/maps/documentation/geocoding/overview}
 #' @export
 #' @encoding UTF-8
 #' @examples

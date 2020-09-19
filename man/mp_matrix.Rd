@@ -77,5 +77,5 @@ doc = mp_matrix(
 }
 }
 \references{
-\url{https://developers.google.com/maps/documentation/distance-matrix/intro}
+\url{https://developers.google.com/maps/documentation/distance-matrix/overview}
 }

@@ -123,5 +123,5 @@ mp_get_routes(doc)$duration_in_traffic_text
 }
 }
 \references{
-\url{https://developers.google.com/maps/documentation/directions/intro}
+\url{https://developers.google.com/maps/documentation/directions/overview}
 }

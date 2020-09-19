@@ -111,5 +111,5 @@ g1 + g2 + g3 + g4
 }
 }
 \references{
-\url{https://developers.google.com/maps/documentation/maps-static/intro}
+\url{https://developers.google.com/maps/documentation/maps-static/overview}
 }

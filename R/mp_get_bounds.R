@@ -82,7 +82,7 @@ mp_get_bounds = function(doc)  {
     geometry[[i]] = bounds
     dat[[i]] = data.frame(
       status = status,
-      address = names(doc)[i],
+      address = ifelse(!is.null(names(doc)[i]), names(doc)[i], NA),
       address_google = address_google,
       stringsAsFactors = FALSE
     )

@@ -8,7 +8,7 @@
 #' @param key Google APIs key
 #' @param quiet Logical; suppress printing URL for Google Maps API call (e.g. to hide API key)
 #' @return A \code{stars} raster with the requested map, in Web Mercator CRS (EPSG:3857).
-#' @references \url{https://developers.google.com/maps/documentation/maps-static/intro}
+#' @references \url{https://developers.google.com/maps/documentation/maps-static/overview}
 #' @export
 #' @examples
 #'

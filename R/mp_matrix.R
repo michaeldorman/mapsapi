@@ -16,7 +16,7 @@
 #' @param quiet Logical; suppress printing URL for Google Maps API call (e.g. to hide API key)
 #' @return XML document with Google Maps Distance Matrix API response
 #' @note Use function \code{\link{mp_get_matrix}} to extract \strong{distance} and \strong{duration} \code{matrix} objects
-#' @references \url{https://developers.google.com/maps/documentation/distance-matrix/intro}
+#' @references \url{https://developers.google.com/maps/documentation/distance-matrix/overview}
 #' @export
 #' @examples
 #' # Built-in reponse example

@@ -26,7 +26,7 @@
 #' \item Use function \code{\link{mp_get_routes}} to extract \code{sf} line layer where each feature is a \strong{route}
 #' \item Use function \code{\link{mp_get_segments}} to extract \code{sf} line layer where each feature is a \strong{route segment}
 #' }
-#' @references \url{https://developers.google.com/maps/documentation/directions/intro}
+#' @references \url{https://developers.google.com/maps/documentation/directions/overview}
 #' @export
 #' @examples
 #' # Built-in reponse example

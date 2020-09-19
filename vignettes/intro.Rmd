@@ -32,10 +32,10 @@ div.svg-container {
 
 The `mapsapi` package provides an interface to the Google Maps APIs, currently four of them:
 
-* <a href="https://developers.google.com/maps/documentation/directions/" target="_blank">Google Maps Direction API</a>
-* <a href="https://developers.google.com/maps/documentation/distance-matrix/" target="_blank">Google Maps Distance Matrix API</a>
-* <a href="https://developers.google.com/maps/documentation/geocoding/" target="_blank">Google Maps Geocode API</a>
-* <a href="https://developers.google.com/maps/documentation/maps-static/" target="_blank">Maps Static API</a>
+* <a href="https://developers.google.com/maps/documentation/directions/overview" target="_blank">Google Maps Direction API</a>
+* <a href="https://developers.google.com/maps/documentation/distance-matrix/overview" target="_blank">Google Maps Distance Matrix API</a>
+* <a href="https://developers.google.com/maps/documentation/geocoding/overview" target="_blank">Google Maps Geocode API</a>
+* <a href="https://developers.google.com/maps/documentation/maps-static/overview" target="_blank">Maps Static API</a>
 
 Functions `mp_directions`, `mp_matrix` and `mp_geocode` are used to access the Directions, Matrix and Geocode APIs, respectively. They return an `xml_document` object (package `xml2`) with the response contents.  
 
