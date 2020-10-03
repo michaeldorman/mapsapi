@@ -7,18 +7,14 @@
 # mapsapi
 
 The `mapsapi` package provides an interface to the Google Maps APIs,
-currently four of
-    them:
+currently four of them:
 
   - <a href="https://developers.google.com/maps/documentation/directions/" target="_blank">Google
-    Maps Direction
-    API</a>
+    Maps Direction API</a>
   - <a href="https://developers.google.com/maps/documentation/distance-matrix/" target="_blank">Google
-    Maps Distance Matrix
-    API</a>
+    Maps Distance Matrix API</a>
   - <a href="https://developers.google.com/maps/documentation/geocoding/" target="_blank">Google
-    Maps Geocode
-    API</a>
+    Maps Geocode API</a>
   - <a href="https://developers.google.com/maps/documentation/maps-static/" target="_blank">Maps
     Static API</a>
 
@@ -74,6 +70,11 @@ starting from June 2018 the functions require an API key.**
 key = "AIz....."
 ```
 
+## Documentation
+
+The complete documentation can be found at
+<https://michaeldorman.github.io/mapsapi/>.
+
 ## Example
 
 The following code section obtains (and plots) the driving directions
@@ -95,7 +96,7 @@ r = mp_get_routes(doc)
 # Plot
 library(maps)
 library(sf)
-#> Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 7.0.0
+#> Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1
 map("state", fill = FALSE, col = "grey")
 plot(st_geometry(r), col = c("red", "green", "blue"), add = TRUE)
 ```
