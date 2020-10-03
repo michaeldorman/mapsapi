@@ -70,7 +70,7 @@ The complete documentation can be found at [https://michaeldorman.github.io/maps
 The following code section obtains (and plots) the driving directions from New-York to Los Angeles. 
 
 ```{r, include=FALSE}
-key = readLines("~/key_google")
+key = readLines("~/key")
 ```
 
 ```{r example}
