@@ -92,3 +92,7 @@ library(sf)
 map("state", fill = FALSE, col = "grey")
 plot(st_geometry(r), col = c("red", "green", "blue"), add = TRUE)
 ```
+
+```{r, include=FALSE}
+file.copy("README-example-1.png", "docs/README-example-1.png")
+```
