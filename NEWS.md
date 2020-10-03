@@ -56,11 +56,16 @@
 * Added 'traffic_model' parameter in 'mp_directions' and 'mp_matrix'
 * Added 'quiet' parameter in 'mp_geocode'
 
-## mapsapi 0.4.7
+## mapsapi 0.4.7 (2020-09-19)
 
 * 'mp_get_points' and 'mp_get_bounds' now also works given unnamed 'list' of documents
+
+## mapsapi 0.4.8
+
+* Added 'pkgdown' site
 
 ## To do
 
 * Allow selecting >1 'avoid' options in 'mp_directions'
 * Static maps from other sources (?)
+

@@ -8,3 +8,6 @@ cran-comments.md
 ^doc$
 ^Meta$
 ^data-raw$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

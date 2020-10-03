@@ -61,6 +61,10 @@ library(mapsapi)
 key = "AIz....."
 ```
 
+## Documentation
+
+The complete documentation can be found at [https://michaeldorman.github.io/mapsapi/](https://michaeldorman.github.io/mapsapi/).
+
 ## Example
 
 The following code section obtains (and plots) the driving directions from New-York to Los Angeles. 

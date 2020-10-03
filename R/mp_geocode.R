@@ -28,8 +28,7 @@
 #'
 #' # Basic use
 #' addresses = c("Rehovot", "Beer-Sheva", "New-York")
-#' doc = mp_geocode(addresses) # without key
-#' doc = mp_geocode(addresses, key = key) # with key
+#' doc = mp_geocode(addresses, key = key)
 #' pnt = mp_get_points(doc)
 #' pnt
 #'

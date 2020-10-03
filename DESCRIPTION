@@ -20,7 +20,7 @@ Imports:
     bitops,
     stars,
     RgoogleMaps
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Suggests: 
     knitr,
     rmarkdown,
@@ -28,5 +28,5 @@ Suggests:
     ggplot2,
     dplyr
 VignetteBuilder: knitr
-URL: https://github.com/michaeldorman/mapsapi/
+URL: https://michaeldorman.github.io/mapsapi/, https://github.com/michaeldorman/mapsapi/
 BugReports: https://github.com/michaeldorman/mapsapi/issues/

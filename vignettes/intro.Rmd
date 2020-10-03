@@ -245,9 +245,14 @@ r = response_map
 
 The result is a `stars` raster, which can be plotted with `plot`:
 
-```{r}
+```{r, eval=FALSE}
 library(stars)
 plot(r)
+```
+
+```{r, echo=FALSE}
+library(stars)
+plot(r, useRaster=TRUE)
 ```
 
 or with `ggplot2`:
