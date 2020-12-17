@@ -94,5 +94,6 @@ plot(st_geometry(r), col = c("red", "green", "blue"), add = TRUE)
 ```
 
 ```{r, include=FALSE}
-file.copy("README-example-1.png", "docs/README-example-1.png")
+x = list.files(pattern = "^README-.*\\.png$")
+file.copy(x, "docs/", overwrite = TRUE)
 ```

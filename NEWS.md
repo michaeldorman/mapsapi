@@ -63,6 +63,8 @@
 ## mapsapi 0.4.8
 
 * Added 'pkgdown' site
+* Fixed 'mp_get_bounds' when bounds results are empty
+* Fixed 'mp_get_bounds' when more than one response per address
 
 ## To do
 

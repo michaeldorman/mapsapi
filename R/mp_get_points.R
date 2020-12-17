@@ -96,7 +96,7 @@ mp_get_points = function(doc, all_results = FALSE)  {
   # Combine results
   result = do.call(rbind, result)
 
-  # Select just first result
+  # Take only first response
   if(!all_results) {
     result = result[!duplicated(result$id), ]
   }

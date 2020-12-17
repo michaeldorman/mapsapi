@@ -252,7 +252,7 @@ plot(r)
 
 ```{r, echo=FALSE}
 library(stars)
-plot(r, useRaster=TRUE)
+plot(r, useRaster = TRUE)
 ```
 
 or with `ggplot2`:

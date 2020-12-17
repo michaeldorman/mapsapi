@@ -10,17 +10,26 @@ mp_get_bounds(doc)
 \item{doc}{XML document with Google Maps Geocode API response}
 }
 \value{
-\code{sf} Polygonal layer representing bounds of geocoded locations
+\code{sf} Polygonal layer representing bounds of geocoded locations. In cases when there is more than one response per address, only first response is considered.
 }
 \description{
 Extract geocoded *bounds* from Google Maps Geocode API response
 }
 \examples{
+
+# Built-in reponse example
 library(xml2)
 doc = list("Tel-Aviv" = as_xml_document(response_geocode))
 b = mp_get_bounds(doc)
+
 \dontrun{
-doc = mp_geocode(addresses = c("Tel-Aviv", "Rehovot", "Beer-Sheva"))
+
+# Text file with API key
+key = readLines("~/key")
+
+# Get bounds
+doc = mp_geocode(addresses = c("Tel-Aviv", "Rehovot", "Beer-Sheva"), region = "il", key = key)
 b = mp_get_bounds(doc)
+
 }
 }
