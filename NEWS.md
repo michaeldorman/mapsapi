@@ -66,6 +66,10 @@
 * Fixed 'mp_get_bounds' when bounds results are empty
 * Fixed 'mp_get_bounds' when more than one response per address
 
+## mapsapi 0.4.9
+
+* Fixed bug in 'mp_matrix' (by Juan P. Fonseca-Zamora)
+
 ## To do
 
 * Allow selecting >1 'avoid' options in 'mp_directions'
