@@ -58,6 +58,7 @@ mp_matrix = function(
   # Checks
   mode = match.arg(mode)
   avoid = match.arg(avoid)
+  traffic_model = match.arg(traffic_model)
   .check_posix_time(arrival_time)
   .check_posix_time(departure_time)
 
