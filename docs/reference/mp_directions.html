@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mapsapi</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.9</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -106,7 +106,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/michaeldorman/mapsapi/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -143,6 +143,8 @@
   avoid <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>NA</span>, <span class='st'>"tolls"</span>, <span class='st'>"highways"</span>, <span class='st'>"ferries"</span>, <span class='st'>"indoor"</span><span class='op'>)</span>,
   region <span class='op'>=</span> <span class='cn'>NULL</span>,
   traffic_model <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"best_guess"</span>, <span class='st'>"pessimistic"</span>, <span class='st'>"optimistic"</span><span class='op'>)</span>,
+  transit_mode <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"bus"</span>, <span class='st'>"subway"</span>, <span class='st'>"train"</span>, <span class='st'>"tram"</span><span class='op'>)</span>,
+  transit_routing_preference <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>NA</span>, <span class='st'>"less_walking"</span>, <span class='st'>"fewer_transfers"</span><span class='op'>)</span>,
   <span class='va'>key</span>,
   quiet <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
@@ -199,6 +201,14 @@
     <tr>
       <th>traffic_model</th>
       <td><p>The traffic model, one of: <code>"best_guess"</code> (the default), <code>"pessimistic"</code>, <code>"optimistic"</code>. The <code>traffic_model</code> parameter is only taken into account when <code>departure_time</code> is specified!</p></td>
+    </tr>
+    <tr>
+      <th>transit_mode</th>
+      <td><p>Transit preferred mode, one or more of: <code>"bus"</code>, <code>"subway"</code>, <code>"train"</code> or <code>"tram"</code></p></td>
+    </tr>
+    <tr>
+      <th>transit_routing_preference</th>
+      <td><p>Transit route preference. <code>NA</code> (default, means no preference) or one of: <code>"less_walking"</code> or <code>"fewer_transfers"</code></p></td>
     </tr>
     <tr>
       <th>key</th>

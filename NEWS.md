@@ -69,6 +69,7 @@
 ## mapsapi 0.4.9
 
 * Fixed bug in 'mp_matrix' (by Juan P. Fonseca-Zamora)
+* New arguments in 'mp_directions' (by Juan P. Fonseca-Zamora)
 
 ## To do
 

@@ -15,6 +15,8 @@ mp_directions(
   avoid = c(NA, "tolls", "highways", "ferries", "indoor"),
   region = NULL,
   traffic_model = c("best_guess", "pessimistic", "optimistic"),
+  transit_mode = c("bus", "subway", "train", "tram"),
+  transit_routing_preference = c(NA, "less_walking", "fewer_transfers"),
   key,
   quiet = FALSE
 )
@@ -49,6 +51,10 @@ mp_directions(
 \item{region}{The region code, specified as a ccTLD ("top-level domain") two-character value (e.g. \code{"es"} for Spain) (optional)}
 
 \item{traffic_model}{The traffic model, one of: \code{"best_guess"} (the default), \code{"pessimistic"}, \code{"optimistic"}. The \code{traffic_model} parameter is only taken into account when \code{departure_time} is specified!}
+
+\item{transit_mode}{Transit preferred mode, one or more of: \code{"bus"}, \code{"subway"}, \code{"train"} or \code{"tram"}}
+
+\item{transit_routing_preference}{Transit route preference. \code{NA} (default, means no preference) or one of: \code{"less_walking"} or \code{"fewer_transfers"}}
 
 \item{key}{Google APIs key}
 
