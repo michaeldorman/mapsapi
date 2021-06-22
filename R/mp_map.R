@@ -150,7 +150,7 @@ mp_map = function(
   # Get response
   url = utils::URLencode(url)
   filename = tempfile(fileext = ".png")
-  utils::download.file(url, filename, quiet = quiet)
+  utils::download.file(url, filename, mode = "wb", quiet = quiet)
 
   # Process to raster
   r = stars::read_stars(filename)

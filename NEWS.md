@@ -66,10 +66,14 @@
 * Fixed 'mp_get_bounds' when bounds results are empty
 * Fixed 'mp_get_bounds' when more than one response per address
 
-## mapsapi 0.4.9
+## mapsapi 0.4.9 (2021-06-13)
 
 * Fixed bug in 'mp_matrix' (by Juan P. Fonseca-Zamora)
 * New arguments in 'mp_directions' (by Juan P. Fonseca-Zamora)
+
+## mapsapi 0.5.0
+
+* Corrected download method in 'mp_map' to avoid corrupted PNG (on Windows)
 
 ## To do
 
