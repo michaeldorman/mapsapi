@@ -1,7 +1,7 @@
 Package: mapsapi
 Type: Package
 Title: 'sf'-Compatible Interface to 'Google Maps' APIs
-Version: 0.5.0
+Version: 0.5.1
 Authors@R: c(
     person("Michael", "Dorman", email = "dorman@post.bgu.ac.il", role = c("aut", "cre")),
     person("Tom", "Buckley", role = c("ctb")),
@@ -20,7 +20,8 @@ Imports:
     sf,
     bitops,
     stars,
-    RgoogleMaps
+    RgoogleMaps,
+    httr
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,

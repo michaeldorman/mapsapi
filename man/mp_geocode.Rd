@@ -11,7 +11,8 @@ mp_geocode(
   postcode = NULL,
   bounds = NULL,
   key,
-  quiet = FALSE
+  quiet = FALSE,
+  timeout = 10
 )
 }
 \arguments{
@@ -26,6 +27,8 @@ mp_geocode(
 \item{key}{Google APIs key (optional)}
 
 \item{quiet}{Logical; suppress printing geocode request statuses}
+
+\item{timeout}{\code{numeric} of length 1, number of seconds to timeout, passed to \code{curl}s \code{connecttimeout} option. Default is \code{10} seconds}
 }
 \value{
 \code{list} of XML documents with Google Maps Geocoding API responses, one item per element in \code{addresses}

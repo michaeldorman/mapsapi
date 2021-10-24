@@ -5,6 +5,7 @@
 #' @param bounds A preferred bounding box, specified as a numeric vector with four values xmin/ymin/xmax/ymax (in latitude/longitude) representing the coordinates of the southwest and northeast corners, e.g. as returned by function `sf::st_bbox`. This can be a single vector (in which case it is replicated) or a \code{list} of numeric vectors with the same length as \code{addresses} (optional)
 #' @param key Google APIs key (optional)
 #' @param quiet Logical; suppress printing geocode request statuses
+#' @param timeout \code{numeric} of length 1, number of seconds to timeout, passed to \code{curl}s \code{connecttimeout} option. Default is \code{10} seconds
 #' @return \code{list} of XML documents with Google Maps Geocoding API responses, one item per element in \code{addresses}
 #' @note \itemize{
 #' \item Use function \code{\link{mp_get_points}} to extract \strong{locations} as \code{sf} point layer
@@ -68,7 +69,8 @@ mp_geocode = function(
   postcode = NULL,
   bounds = NULL,
   key,
-  quiet = FALSE
+  quiet = FALSE,
+  timeout = 10
   ) {
 
   # Checks
@@ -164,7 +166,9 @@ mp_geocode = function(
       # Get response
       url = utils::URLencode(url)
       if(!quiet) message(url)
-      response[[i]] = xml2::read_xml(url)
+      # response[[i]] = xml2::read_xml(url)
+      res = httr::GET(url, config = httr::config(connecttimeout = timeout))
+      response[[i]] = httr::content(res, as = "parsed")
 
       # 'status' to print
       status =

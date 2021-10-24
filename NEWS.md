@@ -71,12 +71,17 @@
 * Fixed bug in 'mp_matrix' (by Juan P. Fonseca-Zamora)
 * New arguments in 'mp_directions' (by Juan P. Fonseca-Zamora)
 
-## mapsapi 0.5.0
+## mapsapi 0.5.0 (2021-09-06)
 
 * Corrected download method in 'mp_map' to avoid corrupted PNG (on Windows)
 
+## mapsapi 0.5.1 (2021-10-24)
+
+* Added 'timeout' option in 'mp_geocode'
+
 ## To do
 
+* Add timeout option in all functions (similarly to 'mp_geocode')
 * Allow selecting >1 'avoid' options in 'mp_directions'
 * Static maps from other sources (?)
 
