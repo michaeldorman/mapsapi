@@ -79,6 +79,10 @@
 
 * Added 'timeout' option in 'mp_geocode'
 
+## mapsapi 0.5.2
+
+* Added 'transit_mode' parameter in 'mp_matrix'
+
 ## To do
 
 * Add timeout option in all functions (similarly to 'mp_geocode')
