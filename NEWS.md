@@ -75,17 +75,15 @@
 
 * Corrected download method in 'mp_map' to avoid corrupted PNG (on Windows)
 
-## mapsapi 0.5.1 (2021-10-24)
+## mapsapi 0.5.3 
 
 * Added 'timeout' option in 'mp_geocode'
-
-## mapsapi 0.5.2
-
 * Added 'transit_mode' parameter in 'mp_matrix'
+* Added 'language' parameter in 'mp_directions'
 
 ## To do
 
 * Add timeout option in all functions (similarly to 'mp_geocode')
 * Allow selecting >1 'avoid' options in 'mp_directions'
-* Static maps from other sources (?)
+* Static maps from sources other than Google Maps (?)
 

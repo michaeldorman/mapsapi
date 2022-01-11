@@ -56,166 +56,175 @@
 
 mp_get_routes = function(doc)  {
 
-  # Count alternative routes
-  alternatives =
-    doc %>%
-    xml_find_all("/DirectionsResponse/route") %>%
-    length
+  # Check status
+  status = doc |> 
+    xml_find_all("/DirectionsResponse/status") |> 
+    xml_text()
+  
+  if(status != "OK") stop(sprintf("Google Maps API status is %s", status)) else {
 
-  # Zero results
-  if(alternatives == 0) {
+    # Count alternative routes
+    alternatives =
+      doc %>%
+      xml_find_all("/DirectionsResponse/route") %>%
+      length
 
-    routes = sf::st_sf(
-      alternative_id = NA,
-      summary = NA,
-      distance_m = NA,
-      distance_text = NA,
-      duration_s = NA,
-      duration_text = NA,
-      duration_in_traffic_s = NA,
-      duration_in_traffic_text = NA,
-      geometry = sf::st_sfc(sf::st_linestring(), crs = 4326),
-      stringsAsFactors = FALSE
-    )
+    # Zero results
+    if(alternatives == 0) {
 
-  } else {
-
-    # Non-zero results
-    routes = list()
-    for(i in 1:alternatives) {
-
-      route =
-        doc %>%
-        xml_find_all(sprintf("/DirectionsResponse/route[%s]/overview_polyline/points", i)) %>%
-        xml_text
-
-      summary =
-        doc %>%
-        xml_find_all(sprintf("/DirectionsResponse/route[%s]/summary", i)) %>%
-        xml_text
-
-      # Count legs
-      legs =
-        doc %>%
-        xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg", i)) %>%
-        length
-
-      for(l in 1:legs) {
-
-        distance_m =
-          doc %>%
-          xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/distance/value", i, l)) %>%
-          xml_text %>%
-          as.numeric %>%
-          sum
-
-        distance_text =
-          doc %>%
-          xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/distance/text", i, l)) %>%
-          xml_text %>%
-          paste(collapse = "|")
-
-        duration_s =
-          doc %>%
-          xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/duration/value", i, l)) %>%
-          xml_text %>%
-          as.numeric %>%
-          sum
-
-        duration_text =
-          doc %>%
-          xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/duration/text", i, l)) %>%
-          xml_text %>%
-          paste(collapse = "|")
-
-        duration_in_traffic_s =
-          doc %>%
-          xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/duration_in_traffic/value", i, l)) %>%
-          xml_text %>%
-          as.numeric
-        if(length(duration_in_traffic_s) == 0)
-          duration_in_traffic_s = NA
-        if(length(duration_in_traffic_s) > 1)
-          duration_in_traffic_s = sum(duration_in_traffic_s)
-
-        duration_in_traffic_text =
-          doc %>%
-          xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/duration_in_traffic/text", i, l)) %>%
-          xml_text
-        if(length(duration_in_traffic_text) == 0)
-          duration_in_traffic_text = NA
-        if(length(duration_in_traffic_text) > 1)
-          duration_in_traffic_text = paste(duration_in_traffic_text, collapse = "|")
-
-        # Departure & arrival time
-        departure_time =
-          doc %>%
-          xml_find_all(sprintf(
-            "/DirectionsResponse/route[%s]/leg[%s]/departure_time/value",
-            i, l)) %>%
-          xml_text
-        if(length(departure_time) == 0) {
-          departure_time = as.POSIXct(NA)} else {
-            departure_time = as.numeric(departure_time)
-            departure_time = as.POSIXct(departure_time, tz = "UTC", origin = as.POSIXct("1970-01-01 00:00:00", tz = "UTC"))
-            time_zone =
-              doc %>%
-              xml_find_all(sprintf(
-                "/DirectionsResponse/route[%s]/leg[%s]/departure_time/time_zone",
-                i, l)) %>%
-              xml_text
-            departure_time = format(departure_time, tz = time_zone)
-            departure_time = as.POSIXct(departure_time, tz = time_zone)
-          }
-        arrival_time =
-          doc %>%
-          xml_find_all(sprintf(
-            "/DirectionsResponse/route[%s]/leg[%s]/arrival_time/value",
-            i, l)) %>%
-          xml_text
-        if(length(arrival_time) == 0) {
-          arrival_time = as.POSIXct(NA)} else {
-            arrival_time = as.numeric(arrival_time)
-            arrival_time = as.POSIXct(arrival_time, tz = "UTC", origin = as.POSIXct("1970-01-01 00:00:00", tz = "UTC"))
-            time_zone =
-              doc %>%
-              xml_find_all(sprintf(
-                "/DirectionsResponse/route[%s]/leg[%s]/arrival_time/time_zone",
-                i, l)) %>%
-              xml_text
-            arrival_time = format(arrival_time, tz = time_zone)
-            arrival_time = as.POSIXct(arrival_time, tz = time_zone)
-          }
-
-        rt = lapply(route, decode_line)
-        rt = lapply(rt, sf::st_linestring)
-        rt = lapply(rt, sf::st_sfc, crs = 4326)
-        rt = do.call(c, rt)
-
-      routes[[paste(i, l, sep = "-")]] = sf::st_sf(
-        alternative_id = i,
-        leg_id = l,
-        summary = summary,
-        distance_m = distance_m,
-        distance_text = distance_text,
-        duration_s = duration_s,
-        duration_text = duration_text,
-        duration_in_traffic_s = duration_in_traffic_s,
-        duration_in_traffic_text = duration_in_traffic_text,
-        departure_time = departure_time,
-        arrival_time = arrival_time,
-        geometry = rt,
+      routes = sf::st_sf(
+        alternative_id = NA,
+        summary = NA,
+        distance_m = NA,
+        distance_text = NA,
+        duration_s = NA,
+        duration_text = NA,
+        duration_in_traffic_s = NA,
+        duration_in_traffic_text = NA,
+        geometry = sf::st_sfc(sf::st_linestring(), crs = 4326),
         stringsAsFactors = FALSE
-        )
+      )
+
+    } else {
+
+      # Non-zero results
+      routes = list()
+      for(i in 1:alternatives) {
+
+        route =
+          doc %>%
+          xml_find_all(sprintf("/DirectionsResponse/route[%s]/overview_polyline/points", i)) %>%
+          xml_text
+
+        summary =
+          doc %>%
+          xml_find_all(sprintf("/DirectionsResponse/route[%s]/summary", i)) %>%
+          xml_text
+
+        # Count legs
+        legs =
+          doc %>%
+          xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg", i)) %>%
+          length
+
+        for(l in 1:legs) {
+
+          distance_m =
+            doc %>%
+            xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/distance/value", i, l)) %>%
+            xml_text %>%
+            as.numeric %>%
+            sum
+
+          distance_text =
+            doc %>%
+            xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/distance/text", i, l)) %>%
+            xml_text %>%
+            paste(collapse = "|")
+
+          duration_s =
+            doc %>%
+            xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/duration/value", i, l)) %>%
+            xml_text %>%
+            as.numeric %>%
+            sum
+
+          duration_text =
+            doc %>%
+            xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/duration/text", i, l)) %>%
+            xml_text %>%
+            paste(collapse = "|")
+
+          duration_in_traffic_s =
+            doc %>%
+            xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/duration_in_traffic/value", i, l)) %>%
+            xml_text %>%
+            as.numeric
+          if(length(duration_in_traffic_s) == 0)
+            duration_in_traffic_s = NA
+          if(length(duration_in_traffic_s) > 1)
+            duration_in_traffic_s = sum(duration_in_traffic_s)
+
+          duration_in_traffic_text =
+            doc %>%
+            xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/duration_in_traffic/text", i, l)) %>%
+            xml_text
+          if(length(duration_in_traffic_text) == 0)
+            duration_in_traffic_text = NA
+          if(length(duration_in_traffic_text) > 1)
+            duration_in_traffic_text = paste(duration_in_traffic_text, collapse = "|")
+
+          # Departure & arrival time
+          departure_time =
+            doc %>%
+            xml_find_all(sprintf(
+              "/DirectionsResponse/route[%s]/leg[%s]/departure_time/value",
+              i, l)) %>%
+            xml_text
+          if(length(departure_time) == 0) {
+            departure_time = as.POSIXct(NA)} else {
+              departure_time = as.numeric(departure_time)
+              departure_time = as.POSIXct(departure_time, tz = "UTC", origin = as.POSIXct("1970-01-01 00:00:00", tz = "UTC"))
+              time_zone =
+                doc %>%
+                xml_find_all(sprintf(
+                  "/DirectionsResponse/route[%s]/leg[%s]/departure_time/time_zone",
+                  i, l)) %>%
+                xml_text
+              departure_time = format(departure_time, tz = time_zone)
+              departure_time = as.POSIXct(departure_time, tz = time_zone)
+            }
+          arrival_time =
+            doc %>%
+            xml_find_all(sprintf(
+              "/DirectionsResponse/route[%s]/leg[%s]/arrival_time/value",
+              i, l)) %>%
+            xml_text
+          if(length(arrival_time) == 0) {
+            arrival_time = as.POSIXct(NA)} else {
+              arrival_time = as.numeric(arrival_time)
+              arrival_time = as.POSIXct(arrival_time, tz = "UTC", origin = as.POSIXct("1970-01-01 00:00:00", tz = "UTC"))
+              time_zone =
+                doc %>%
+                xml_find_all(sprintf(
+                  "/DirectionsResponse/route[%s]/leg[%s]/arrival_time/time_zone",
+                  i, l)) %>%
+                xml_text
+              arrival_time = format(arrival_time, tz = time_zone)
+              arrival_time = as.POSIXct(arrival_time, tz = time_zone)
+            }
+
+          rt = lapply(route, decode_line)
+          rt = lapply(rt, sf::st_linestring)
+          rt = lapply(rt, sf::st_sfc, crs = 4326)
+          rt = do.call(c, rt)
+
+        routes[[paste(i, l, sep = "-")]] = sf::st_sf(
+          alternative_id = i,
+          leg_id = l,
+          summary = summary,
+          distance_m = distance_m,
+          distance_text = distance_text,
+          duration_s = duration_s,
+          duration_text = duration_text,
+          duration_in_traffic_s = duration_in_traffic_s,
+          duration_in_traffic_text = duration_in_traffic_text,
+          departure_time = departure_time,
+          arrival_time = arrival_time,
+          geometry = rt,
+          stringsAsFactors = FALSE
+          )
+
+        }
 
       }
+      routes = do.call(rbind, routes)
 
     }
-    routes = do.call(rbind, routes)
+
+    return(routes)
 
   }
-
-  return(routes)
 
 }
 

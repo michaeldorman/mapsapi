@@ -17,6 +17,7 @@ mp_directions(
   traffic_model = c("best_guess", "pessimistic", "optimistic"),
   transit_mode = c("bus", "subway", "train", "tram"),
   transit_routing_preference = c(NA, "less_walking", "fewer_transfers"),
+  language = NULL,
   key,
   quiet = FALSE
 )
@@ -55,6 +56,8 @@ mp_directions(
 \item{transit_mode}{Transit preferred mode, one or more of: \code{"bus"}, \code{"subway"}, \code{"train"} or \code{"tram"}}
 
 \item{transit_routing_preference}{Transit route preference. \code{NA} (default, means no preference) or one of: \code{"less_walking"} or \code{"fewer_transfers"}}
+
+\item{language}{The language in which to return directions. See \url{https://developers.google.com/maps/faq#languagesupport} for list of language codes.}
 
 \item{key}{Google APIs key}
 

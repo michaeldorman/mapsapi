@@ -72,11 +72,23 @@ doc = mp_matrix(
 )
 
 # Using 'character' input
-locations = c("Haifa", "Tel-Aviv", "Jerusalem", "Beer-Sheva")
+locations = c("Tel-Aviv", "Jerusalem", "Beer-Sheva", "Eilat")
 doc = mp_matrix(
   origins = locations,
-  destinations = locations
+  destinations = locations,
+  key = key
 )
+
+Setting transit modes
+locations = c("Tel-Aviv", "Beer-Sheva", "Eilat")
+doc = mp_matrix(
+  origins = locations,
+  destinations = locations,
+  key = key,
+  mode = "transit",
+  transit_mode = "train"
+)
+
 }
 }
 \references{
