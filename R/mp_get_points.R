@@ -26,8 +26,8 @@ mp_get_points = function(doc, all_results = FALSE)  {
 
       # Check status
       status =
-        doc[[i]] %>%
-        xml2::xml_find_all("/GeocodeResponse/status") %>%
+        doc[[i]] |>
+        xml2::xml_find_all("/GeocodeResponse/status") |>
         xml2::xml_text()
 
     } else {
@@ -40,27 +40,27 @@ mp_get_points = function(doc, all_results = FALSE)  {
 
       # Address from Google
       address_google =
-        doc[[i]] %>%
-        xml2::xml_find_all("/GeocodeResponse/result/formatted_address") %>%
+        doc[[i]] |>
+        xml2::xml_find_all("/GeocodeResponse/result/formatted_address") |>
         xml2::xml_text()
 
       # Location type
       location_type =
-        doc[[i]] %>%
-        xml2::xml_find_all("/GeocodeResponse/result/geometry/location_type") %>%
+        doc[[i]] |>
+        xml2::xml_find_all("/GeocodeResponse/result/geometry/location_type") |>
         xml2::xml_text()
 
       # Coordinates
       lon =
-        doc[[i]] %>%
-        xml2::xml_find_all("/GeocodeResponse/result/geometry/location/lng") %>%
-        xml2::xml_text() %>%
-        as.numeric
+        doc[[i]] |>
+        xml2::xml_find_all("/GeocodeResponse/result/geometry/location/lng") |> 
+        xml2::xml_text() |> 
+        as.numeric()
       lat =
-        doc[[i]] %>%
-        xml2::xml_find_all("/GeocodeResponse/result/geometry/location/lat") %>%
-        xml2::xml_text() %>%
-        as.numeric
+        doc[[i]] |> 
+        xml2::xml_find_all("/GeocodeResponse/result/geometry/location/lat") |> 
+        xml2::xml_text() |> 
+        as.numeric()
       coords = cbind(lon, lat)
       coords = split(coords, 1:nrow(coords))
       pnt = lapply(coords, function(x) sf::st_point(x))
@@ -104,5 +104,4 @@ mp_get_points = function(doc, all_results = FALSE)  {
   return(result)
 
 }
-
 

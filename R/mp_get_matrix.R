@@ -53,22 +53,22 @@ mp_get_matrix = function(doc, value = c("distance_m", "distance_text", "duration
   value = match.arg(value)
 
   rows =
-    doc %>%
-    xml_find_all("/DistanceMatrixResponse/row") %>%
-    length
+    doc |>
+    xml2::xml_find_all("/DistanceMatrixResponse/row") |>
+    length()
   cols =
-    doc %>%
-    xml_find_all("/DistanceMatrixResponse/row[1]/element") %>%
-    length
+    doc |>
+    xml2::xml_find_all("/DistanceMatrixResponse/row[1]/element") |>
+    length()
 
   origin_addresses =
-    doc %>%
-    xml_find_all("/DistanceMatrixResponse/origin_address") %>%
-    xml_text
+    doc |>
+    xml2::xml_find_all("/DistanceMatrixResponse/origin_address") |>
+    xml2::xml_text()
   destination_addresses =
-    doc %>%
-    xml_find_all("/DistanceMatrixResponse/destination_address") %>%
-    xml_text
+    doc |>
+    xml2::xml_find_all("/DistanceMatrixResponse/destination_address") |>
+    xml2::xml_text()
 
   m = matrix(NA, nrow = rows, ncol = cols)
 
@@ -79,37 +79,37 @@ mp_get_matrix = function(doc, value = c("distance_m", "distance_text", "duration
       val = switch(value,
 
         distance_m =
-          doc %>%
-          xml_find_all(sprintf("/DistanceMatrixResponse/row[%s]/element[%s]/distance/value", row, col)) %>%
-          xml_text %>%
-          as.numeric,
+          doc |>
+          xml2::xml_find_all(sprintf("/DistanceMatrixResponse/row[%s]/element[%s]/distance/value", row, col)) |>
+          xml2::xml_text() |>
+          as.numeric(),
 
         distance_text =
-          doc %>%
-          xml_find_all(sprintf("/DistanceMatrixResponse/row[%s]/element[%s]/distance/text", row, col)) %>%
-          xml_text,
+          doc |>
+          xml2::xml_find_all(sprintf("/DistanceMatrixResponse/row[%s]/element[%s]/distance/text", row, col)) |>
+          xml2::xml_text(),
 
         duration_s =
-          doc %>%
-          xml_find_all(sprintf("/DistanceMatrixResponse/row[%s]/element[%s]/duration/value", row, col)) %>%
-          xml_text %>%
-          as.numeric,
+          doc |>
+          xml2::xml_find_all(sprintf("/DistanceMatrixResponse/row[%s]/element[%s]/duration/value", row, col)) |>
+          xml2::xml_text() |>
+          as.numeric(),
 
         duration_text =
-          doc %>%
-          xml_find_all(sprintf("/DistanceMatrixResponse/row[%s]/element[%s]/duration/text", row, col)) %>%
-          xml_text,
+          doc |>
+          xml2::xml_find_all(sprintf("/DistanceMatrixResponse/row[%s]/element[%s]/duration/text", row, col)) |>
+          xml2::xml_text(),
 
         duration_in_traffic_s =
-          doc %>%
-          xml_find_all(sprintf("/DistanceMatrixResponse/row[%s]/element[%s]/duration_in_traffic/value", row, col)) %>%
-          xml_text %>%
-          as.numeric,
+          doc |>
+          xml2::xml_find_all(sprintf("/DistanceMatrixResponse/row[%s]/element[%s]/duration_in_traffic/value", row, col)) |>
+          xml2::xml_text() |>
+          as.numeric(),
 
         duration_in_traffic_text =
-          doc %>%
-          xml_find_all(sprintf("/DistanceMatrixResponse/row[%s]/element[%s]/duration_in_traffic/text", row, col)) %>%
-          xml_text
+          doc |>
+          xml2::xml_find_all(sprintf("/DistanceMatrixResponse/row[%s]/element[%s]/duration_in_traffic/text", row, col)) |>
+          xml2::xml_text()
 
       )
 
@@ -129,5 +129,4 @@ mp_get_matrix = function(doc, value = c("distance_m", "distance_text", "duration
   return(m)
 
 }
-
 

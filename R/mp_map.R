@@ -113,13 +113,13 @@ mp_map = function(
     coords = as.numeric(coords)
     coords = rev(coords)
   } else {
-    center = st_geometry(center)
-    center = st_bbox(center)
-    center = st_as_sfc(center)
-    center = st_transform(center, 3857)
-    center = st_centroid(center)
-    center = st_transform(center, 4326)
-    coords = st_coordinates(center)
+    center = sf::st_geometry(center)
+    center = sf::st_bbox(center)
+    center = sf::st_as_sfc(center)
+    center = sf::st_transform(center, 3857)
+    center = sf::st_centroid(center)
+    center = sf::st_transform(center, 4326)
+    coords = sf::st_coordinates(center)
     center = paste0(coords[1, 2], ",", coords[1, 1])
   }
 
@@ -175,7 +175,7 @@ mp_map = function(
   bb = sf::st_as_sfc(bb)
   bb = sf::st_set_crs(bb, 4326)
   bb = sf::st_transform(bb, 3857)
-  bb1 = st_bbox(bb)
+  bb1 = sf::st_bbox(bb)
 
   # Set spatial properties
   attr(r, "dimensions")[["x"]][["offset"]] = bb1[1]

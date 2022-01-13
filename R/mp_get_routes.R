@@ -58,16 +58,16 @@ mp_get_routes = function(doc)  {
 
   # Check status
   status = doc |> 
-    xml_find_all("/DirectionsResponse/status") |> 
-    xml_text()
+    xml2::xml_find_all("/DirectionsResponse/status") |> 
+    xml2::xml_text()
   
   if(status != "OK") stop(sprintf("Google Maps API status is %s", status)) else {
 
     # Count alternative routes
     alternatives =
-      doc %>%
-      xml_find_all("/DirectionsResponse/route") %>%
-      length
+      doc |>
+      xml2::xml_find_all("/DirectionsResponse/route") |>
+      length()
 
     # Zero results
     if(alternatives == 0) {
@@ -92,63 +92,63 @@ mp_get_routes = function(doc)  {
       for(i in 1:alternatives) {
 
         route =
-          doc %>%
-          xml_find_all(sprintf("/DirectionsResponse/route[%s]/overview_polyline/points", i)) %>%
-          xml_text
+          doc |>
+          xml2::xml_find_all(sprintf("/DirectionsResponse/route[%s]/overview_polyline/points", i)) |>
+          xml2::xml_text()
 
         summary =
-          doc %>%
-          xml_find_all(sprintf("/DirectionsResponse/route[%s]/summary", i)) %>%
-          xml_text
+          doc |>
+          xml2::xml_find_all(sprintf("/DirectionsResponse/route[%s]/summary", i)) |>
+          xml2::xml_text()
 
         # Count legs
         legs =
-          doc %>%
-          xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg", i)) %>%
-          length
+          doc |>
+          xml2::xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg", i)) |>
+          length()
 
         for(l in 1:legs) {
 
           distance_m =
-            doc %>%
-            xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/distance/value", i, l)) %>%
-            xml_text %>%
-            as.numeric %>%
-            sum
+            doc |>
+            xml2::xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/distance/value", i, l)) |>
+            xml2::xml_text() |>
+            as.numeric() |>
+            sum()
 
           distance_text =
-            doc %>%
-            xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/distance/text", i, l)) %>%
-            xml_text %>%
+            doc |>
+            xml2::xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/distance/text", i, l)) |>
+            xml2::xml_text() |>
             paste(collapse = "|")
 
           duration_s =
-            doc %>%
-            xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/duration/value", i, l)) %>%
-            xml_text %>%
-            as.numeric %>%
-            sum
+            doc |>
+            xml2::xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/duration/value", i, l)) |>
+            xml2::xml_text() |>
+            as.numeric() |>
+            sum()
 
           duration_text =
-            doc %>%
-            xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/duration/text", i, l)) %>%
-            xml_text %>%
+            doc |>
+            xml2::xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/duration/text", i, l)) |>
+            xml2::xml_text() |>
             paste(collapse = "|")
 
           duration_in_traffic_s =
-            doc %>%
-            xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/duration_in_traffic/value", i, l)) %>%
-            xml_text %>%
-            as.numeric
+            doc |>
+            xml2::xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/duration_in_traffic/value", i, l)) |>
+            xml2::xml_text() |>
+            as.numeric()
           if(length(duration_in_traffic_s) == 0)
             duration_in_traffic_s = NA
           if(length(duration_in_traffic_s) > 1)
             duration_in_traffic_s = sum(duration_in_traffic_s)
 
           duration_in_traffic_text =
-            doc %>%
-            xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/duration_in_traffic/text", i, l)) %>%
-            xml_text
+            doc |>
+            xml2::xml_find_all(sprintf("/DirectionsResponse/route[%s]/leg[%s]/duration_in_traffic/text", i, l)) |>
+            xml2::xml_text()
           if(length(duration_in_traffic_text) == 0)
             duration_in_traffic_text = NA
           if(length(duration_in_traffic_text) > 1)
@@ -156,40 +156,40 @@ mp_get_routes = function(doc)  {
 
           # Departure & arrival time
           departure_time =
-            doc %>%
-            xml_find_all(sprintf(
+            doc |>
+            xml2::xml_find_all(sprintf(
               "/DirectionsResponse/route[%s]/leg[%s]/departure_time/value",
-              i, l)) %>%
-            xml_text
+              i, l)) |>
+            xml2::xml_text()
           if(length(departure_time) == 0) {
             departure_time = as.POSIXct(NA)} else {
               departure_time = as.numeric(departure_time)
               departure_time = as.POSIXct(departure_time, tz = "UTC", origin = as.POSIXct("1970-01-01 00:00:00", tz = "UTC"))
               time_zone =
-                doc %>%
-                xml_find_all(sprintf(
+                doc |>
+                xml2::xml_find_all(sprintf(
                   "/DirectionsResponse/route[%s]/leg[%s]/departure_time/time_zone",
-                  i, l)) %>%
-                xml_text
+                  i, l)) |>
+                xml2::xml_text()
               departure_time = format(departure_time, tz = time_zone)
               departure_time = as.POSIXct(departure_time, tz = time_zone)
             }
           arrival_time =
-            doc %>%
-            xml_find_all(sprintf(
+            doc |>
+            xml2::xml_find_all(sprintf(
               "/DirectionsResponse/route[%s]/leg[%s]/arrival_time/value",
-              i, l)) %>%
-            xml_text
+              i, l)) |>
+            xml2::xml_text()
           if(length(arrival_time) == 0) {
             arrival_time = as.POSIXct(NA)} else {
               arrival_time = as.numeric(arrival_time)
               arrival_time = as.POSIXct(arrival_time, tz = "UTC", origin = as.POSIXct("1970-01-01 00:00:00", tz = "UTC"))
               time_zone =
-                doc %>%
-                xml_find_all(sprintf(
+                doc |>
+                xml2::xml_find_all(sprintf(
                   "/DirectionsResponse/route[%s]/leg[%s]/arrival_time/time_zone",
-                  i, l)) %>%
-                xml_text
+                  i, l)) |>
+                xml2::xml_text()
               arrival_time = format(arrival_time, tz = time_zone)
               arrival_time = as.POSIXct(arrival_time, tz = time_zone)
             }
@@ -227,5 +227,4 @@ mp_get_routes = function(doc)  {
   }
 
 }
-
 

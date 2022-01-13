@@ -172,8 +172,8 @@ mp_geocode = function(
 
       # 'status' to print
       status =
-        response[[i]] %>%
-        xml2::xml_find_all("/GeocodeResponse/status") %>%
+        response[[i]] |>
+        xml2::xml_find_all("/GeocodeResponse/status") |>
         xml2::xml_text()
 
     }

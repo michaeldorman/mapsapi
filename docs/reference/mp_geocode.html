@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mapsapi</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.3</span>
       </span>
     </div>
 
@@ -138,7 +138,8 @@
   postcode <span class='op'>=</span> <span class='cn'>NULL</span>,
   bounds <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>key</span>,
-  quiet <span class='op'>=</span> <span class='cn'>FALSE</span>
+  quiet <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  timeout <span class='op'>=</span> <span class='fl'>10</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -167,6 +168,10 @@
     <tr>
       <th>quiet</th>
       <td><p>Logical; suppress printing geocode request statuses</p></td>
+    </tr>
+    <tr>
+      <th>timeout</th>
+      <td><p><code>numeric</code> of length 1, number of seconds to timeout, passed to <code>curl</code>s <code>connecttimeout</code> option. Default is <code>10</code> seconds</p></td>
     </tr>
     </table>
 

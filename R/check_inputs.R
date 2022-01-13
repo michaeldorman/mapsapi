@@ -45,10 +45,10 @@
   if(class(center)[1] == "character") return(center) else {
     if(inherits(center, c("sfg", "sfc", "sf"))) {
       if(inherits(center, "sfg")) {
-        return(st_sfc(center, crs = 4326))
+        return(sf::st_sfc(center, crs = 4326))
       } else {
-        if(is.na(st_crs(center))) {
-          st_crs(center) = 4326
+        if(is.na(sf::st_crs(center))) {
+          center = sf::st_set_crs(center, 4326)
           return(center)
         } else {
           return(center)

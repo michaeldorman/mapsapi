@@ -83,6 +83,7 @@
 
 ## To do
 
+* Switch to native pipe and remove 'magrittr' dependency
 * Add timeout option in all functions (similarly to 'mp_geocode')
 * Allow selecting >1 'avoid' options in 'mp_directions'
 * Static maps from sources other than Google Maps (?)

@@ -4,10 +4,6 @@
 #'
 #' @format A \code{list} obtained using \code{as_list} on XML response
 #' @note See \code{\link{response_directions_transit}} for Directions API response with \strong{transit} directions
-#' @import magrittr
-#' @import sf
-#' @importFrom xml2 read_xml xml_find_all xml_text
-#' @importFrom utils URLencode
 #' @examples
 #' library(xml2)
 #' doc = as_xml_document(response_directions_driving)

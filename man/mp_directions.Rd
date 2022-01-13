@@ -99,7 +99,7 @@ doc = mp_directions(
 library(sf)
 doc = mp_directions(
   origin = "Beer-Sheva",
-  destination = c(34.781107, 32.085003) \%>\% st_point \%>\% st_sfc(crs = 4326),
+  destination = c(34.781107, 32.085003) |> st_point() |> st_sfc(crs = 4326),
   alternatives = TRUE,
   key = key
 )
