@@ -62,3 +62,11 @@
   if(!zoom %% 1 == 0) stop("'zoom' must be an integer")
   if(zoom < 0) stop("'zoom' must be positive")
 }
+
+## Map styles
+
+.check_map_style = function(style) {
+  valid = inherits(style, 'list') && all(sapply(style, \(x) inherits(x, 'character')))
+  if (!valid) stop("'style' should be a list of named character vectors")
+}
+

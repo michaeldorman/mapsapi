@@ -7,6 +7,10 @@
 #' @param maptype Map type, one of: \code{"roadmap"}, \code{"satellite"}, \code{"terrain"}, \code{"hybrid"}.
 #' @param key Google APIs key
 #' @param quiet Logical; suppress printing URL for Google Maps API call (e.g. to hide API key)
+#' @param style List of named character vector(s) specifying style directives.
+#' The full style reference is available at
+#' https://developers.google.com/maps/documentation/maps-static/style-reference,
+#' see examples below.
 #' @return A \code{stars} raster with the requested map, in Web Mercator CRS (EPSG:3857).
 #' @references \url{https://developers.google.com/maps/documentation/maps-static/overview}
 #' @export
@@ -89,6 +93,18 @@
 #'   theme1
 #' g1 + g2 + g3 + g4
 #'
+#' # styled maps
+#' nl = list(
+#'   c(feature = 'all', element = 'labels', visibility = 'off')
+#' )
+#' nb = list(
+#'   c(feature = 'poi.business', visibility = 'off'),
+#'   c(feature = 'poi.medical', visibility = 'off')
+#' )
+#' r_nl = mp_map(pnt, 14, key = key, style = nl)
+#' plot(r_nl)
+#' r_nb = mp_map(pnt, 14, key = key, style = nb)
+#' plot(r_nb)
 #' }
 
 mp_map = function(
@@ -96,6 +112,7 @@ mp_map = function(
   zoom,
   maptype = c("roadmap", "satellite", "terrain", "hybrid"),
   key,
+  style = NULL,
   quiet = FALSE
 ) {
 
@@ -134,6 +151,16 @@ mp_map = function(
     "&maptype=",
     maptype
   )
+  
+  # Add style
+  if (!is.null(style)) {
+    style = .styles_to_url(style)
+    url = paste0(
+      url,
+      '&style=',
+      style
+    )
+  }
 
   # Add key
   if(!is.null(key)) {
