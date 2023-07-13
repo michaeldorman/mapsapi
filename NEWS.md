@@ -85,7 +85,7 @@
 
 * New options in 'mp_map' (by Rodrigo Vega)
 
-## To do
+## To do in 0.5.5
 
 * Switch to native pipe and remove 'magrittr' dependency
 * Add timeout option in all functions (similarly to 'mp_geocode')

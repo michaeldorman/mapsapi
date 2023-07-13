@@ -56,11 +56,13 @@ Get distance matrix from the Google Maps Distance Matrix API
 Use function \code{\link{mp_get_matrix}} to extract \strong{distance} and \strong{duration} \code{matrix} objects
 }
 \examples{
+
 # Built-in reponse example
 library(xml2)
 doc = as_xml_document(response_matrix)
 
 \dontrun{
+
 # Text file with API key
 key = readLines("~/key")
 
@@ -79,7 +81,7 @@ doc = mp_matrix(
   key = key
 )
 
-Setting transit modes
+# Setting transit modes
 locations = c("Tel-Aviv", "Beer-Sheva", "Eilat")
 doc = mp_matrix(
   origins = locations,

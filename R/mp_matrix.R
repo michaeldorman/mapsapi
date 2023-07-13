@@ -20,11 +20,13 @@
 #' @references \url{https://developers.google.com/maps/documentation/distance-matrix/overview}
 #' @export
 #' @examples
+#' 
 #' # Built-in reponse example
 #' library(xml2)
 #' doc = as_xml_document(response_matrix)
 #'
 #' \dontrun{
+#' 
 #' # Text file with API key
 #' key = readLines("~/key")
 #'
@@ -43,7 +45,7 @@
 #'   key = key
 #' )
 #' 
-#' Setting transit modes
+#' # Setting transit modes
 #' locations = c("Tel-Aviv", "Beer-Sheva", "Eilat")
 #' doc = mp_matrix(
 #'   origins = locations,
