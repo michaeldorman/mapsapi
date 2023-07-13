@@ -6,8 +6,11 @@
 \usage{
 mp_map(
   center,
-  zoom,
+  zoom = 10L,
   maptype = c("roadmap", "satellite", "terrain", "hybrid"),
+  size = c(640L, 640L),
+  scale = 2L,
+  style = NULL,
   key,
   quiet = FALSE
 )
@@ -15,9 +18,22 @@ mp_map(
 \arguments{
 \item{center}{Character of length 1 of the form \code{"lat,lon"} or a geometry of class \code{sfg}, \code{sfc} or \code{sf}. If \code{center} is a geometry, the center of the geometry bounding box is passed as map center. Missing Coordinate Reference System (CRS) is assumed WGS84.}
 
-\item{zoom}{Zoom level, a positive integer or zero. The appropriate range is \code{0} to \code{20}.}
+\item{zoom}{Zoom level, a positive integer or zero. The appropriate range is
+\code{0} to \code{21}. Defaults to `10`.}
 
 \item{maptype}{Map type, one of: \code{"roadmap"}, \code{"satellite"}, \code{"terrain"}, \code{"hybrid"}.}
+
+\item{size}{Numeric of length 2, the width and height of the map in pixels.
+The default is the maximum size allowed (640x640). The final dimensions of
+the image are affected by `scale`.}
+
+\item{scale}{Integer, factor to multiply `size` and determine the final image
+size. Allowed values are 1 and 2, defaults to 2.}
+
+\item{style}{List of named character vector(s) specifying style directives.
+The full style reference is available at
+https://developers.google.com/maps/documentation/maps-static/style-reference,
+see examples below.}
 
 \item{key}{Google APIs key}
 
@@ -108,6 +124,18 @@ g4 = ggplot() +
   theme1
 g1 + g2 + g3 + g4
 
+# styled maps
+nl = list(
+  c(feature = 'all', element = 'labels', visibility = 'off')
+)
+nb = list(
+  c(feature = 'poi.business', visibility = 'off'),
+  c(feature = 'poi.medical', visibility = 'off')
+)
+r_nl = mp_map(pnt, 14, key = key, style = nl)
+plot(r_nl)
+r_nb = mp_map(pnt, 14, key = key, style = nb)
+plot(r_nb)
 }
 }
 \references{

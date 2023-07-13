@@ -60,5 +60,21 @@
 
 .check_map_zoom = function(zoom) {
   if(!zoom %% 1 == 0) stop("'zoom' must be an integer")
-  if(zoom < 0) stop("'zoom' must be positive")
+  if(!(zoom >= 0 && zoom <= 21)) stop("'zoom' must be within 0 and 21")
 }
+
+.check_map_size = function (size) {
+  if(any(is.na(as.integer(size)))) stop("'size' must be an integer or coercible to one")
+  if(!length(size) == 2) stop("'size' must be of length 2")
+  if(!all(0 < size & size <= 640)) stop("'size' must be within 0 and 640")
+}
+
+.check_map_scale = function (scale) {
+  if(!scale %in% 1:2) stop("'scale' must be either 1 or 2")
+}
+
+.check_map_style = function(style) {
+  valid = inherits(style, 'list') && all(sapply(style, \(x) inherits(x, 'character')))
+  if (!valid) stop("'style' should be a list of named character vectors")
+}
+

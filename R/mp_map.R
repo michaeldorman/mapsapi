@@ -3,12 +3,30 @@
 #' Download a static map from the Maps Static API, given map center and zoom level.
 #'
 #' @param center Character of length 1 of the form \code{"lat,lon"} or a geometry of class \code{sfg}, \code{sfc} or \code{sf}. If \code{center} is a geometry, the center of the geometry bounding box is passed as map center. Missing Coordinate Reference System (CRS) is assumed WGS84.
-#' @param zoom Zoom level, a positive integer or zero. The appropriate range is \code{0} to \code{20}.
+#'
+#' @param zoom Zoom level, a positive integer or zero. The appropriate range is
+#' \code{0} to \code{21}. Defaults to `10`.
 #' @param maptype Map type, one of: \code{"roadmap"}, \code{"satellite"}, \code{"terrain"}, \code{"hybrid"}.
+#'
+#' @param size Numeric of length 2, the width and height of the map in pixels.
+#' The default is the maximum size allowed (640x640). The final dimensions of
+#' the image are affected by `scale`.
+#'
+#' @param scale Integer, factor to multiply `size` and determine the final image
+#' size. Allowed values are 1 and 2, defaults to 2.
+#'
+#' @param style List of named character vector(s) specifying style directives.
+#' The full style reference is available at
+#' https://developers.google.com/maps/documentation/maps-static/style-reference,
+#' see examples below.
 #' @param key Google APIs key
+#'
 #' @param quiet Logical; suppress printing URL for Google Maps API call (e.g. to hide API key)
+#'
 #' @return A \code{stars} raster with the requested map, in Web Mercator CRS (EPSG:3857).
+#'
 #' @references \url{https://developers.google.com/maps/documentation/maps-static/overview}
+#'
 #' @export
 #' @examples
 #'
@@ -89,12 +107,27 @@
 #'   theme1
 #' g1 + g2 + g3 + g4
 #'
+#' # styled maps
+#' nl = list(
+#'   c(feature = 'all', element = 'labels', visibility = 'off')
+#' )
+#' nb = list(
+#'   c(feature = 'poi.business', visibility = 'off'),
+#'   c(feature = 'poi.medical', visibility = 'off')
+#' )
+#' r_nl = mp_map(pnt, 14, key = key, style = nl)
+#' plot(r_nl)
+#' r_nb = mp_map(pnt, 14, key = key, style = nb)
+#' plot(r_nb)
 #' }
 
 mp_map = function(
   center,
-  zoom,
+  zoom = 10L,
   maptype = c("roadmap", "satellite", "terrain", "hybrid"),
+  size = c(640L, 640L),
+  scale = 2L,
+  style = NULL,
   key,
   quiet = FALSE
 ) {
@@ -102,6 +135,8 @@ mp_map = function(
   # Checks
   center = .check_map_center(center)
   .check_map_zoom(zoom)
+  .check_map_size(size)
+  .check_map_scale(scale)
 
   # Map type
   maptype = match.arg(maptype)
@@ -126,14 +161,27 @@ mp_map = function(
   # URL, center, zoom & maptype
   url = paste0(
     "https://maps.googleapis.com/maps/api/staticmap?",
-    "size=640x640&scale=2&",
-    "center=",
+    "size=",
+    paste(size, collapse = 'x'),
+    "&scale=",
+    scale,
+    "&center=",
     center,
     "&zoom=",
     zoom,
     "&maptype=",
     maptype
   )
+  
+  # Add style
+  if (!is.null(style)) {
+    style = .styles_to_url(style)
+    url = paste0(
+      url,
+      '&style=',
+      style
+    )
+  }
 
   # Add key
   if(!is.null(key)) {
@@ -157,7 +205,6 @@ mp_map = function(
   names(r) = "color"
 
   # Get bounding box
-  size = c(640, 640)
   ll = RgoogleMaps::XY2LatLon(
     list(lat = coords[2], lon = coords[1], zoom = zoom),
     -size[1]/2,
