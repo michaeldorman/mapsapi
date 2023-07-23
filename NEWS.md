@@ -81,7 +81,7 @@
 * Added 'transit_mode' parameter in 'mp_matrix'
 * Added 'language' parameter in 'mp_directions'
 
-## mapsapi 0.5.4
+## mapsapi 0.5.4 (2023-07-21)
 
 * New options in 'mp_map' (by Rodrigo Vega)
 
